@@ -17,7 +17,6 @@ jobs:
           ARGS: 
             --exclude='.gitignore'
             --exclude='.github/'
-            --exclude='.github/workflows/'
             --exclude='README.md'
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           SOURCE: "./"
