@@ -5,5 +5,8 @@ package-lock.json
 # IDE
 .vscode
 
+# GH
+actions-runner
+
 # MacOS
 .DS_Store
