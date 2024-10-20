@@ -1,8 +1,45 @@
-<!DOCTYPE html>
-<head>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
-</head>
-<body>
-    <p>GH Action Test #2</p>
-</body>
-</html>
+<div id="app">
+    <h1>HP & WSU-V Capstone</h1>
+    <form @submit.prevent="createJob">
+        <label for="jobTitle">Job Title </label>
+        <input type="text" id="jobTitle" name="jobTitle" v-model="jobTitle" />
+        <label for="pageCount">  Page Count </label>
+        <input type="text" id="pageCount" name="pageCount" v-model="pageCount" />
+        <button type="submit">Submit</button>
+    </form>
+    <p>{{message}}</p>
+    
+</div>
+
+<script>
+  const { createApp, ref } = Vue
+
+  createApp({
+    setup() {
+      const message = ref('')
+      const jobTitle = ref('')
+      const pageCount = ref('')
+
+      function createJob() {
+        if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== ''){
+            message.value = jobTitle.value + " has been created"
+            setTimeout(() => {
+                message.value = ''
+                jobTitle.value = ''
+                pageCount.value = ''
+            }, 3000);
+        }
+
+      }
+
+      return {
+        message,
+        jobTitle,
+        pageCount,
+        createJob
+      }
+    }
+  }).mount('#app')
+</script>
