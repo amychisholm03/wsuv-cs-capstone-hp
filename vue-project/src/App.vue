@@ -22,7 +22,7 @@ const createJob = () => {
 </script>
 
 <template>
-  <h1>Print Jobs</h1>
+  <h1>Create a New Print Job</h1>
   <form @submit.prevent="createJob">
         <label for="jobTitle">Job Title </label>
         <input type="text" id="jobTitle" name="jobTitle" v-model="jobTitle" />
