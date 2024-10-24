@@ -6,39 +6,36 @@ const pageCount = ref('')
 const rasterizationProfile = ref('')
 
 
-const createJob = () => {
-  const url = "http://54.200.253.84:80/createJob"
-  //console.log(jobTitle, pageCount, rasterizationProfile)
-  console.log(jobTitle.value.toString(), pageCount.value.toString(), rasterizationProfile.value.toString())
-  const data = {
-    Title: jobTitle.value.toString(),
-    PageCount: pageCount.value.toString(),
-    RasterizationProfile: rasterizationProfile.value.toString()
-  }
-  const r = fetch(url, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      })
-  if (!r.ok){
-    console.log(r)
-  }
-  
-    
+const createJob = async () => {
   if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
-    message.value = jobTitle.value + " has been created"
-    setTimeout(() => {
-      message.value = ''
-      jobTitle.value = ''
-      pageCount.value = ''
-      rasterizationProfile.value = ''
-      }, 3000);
+    const url = "http://54.200.253.84:80/createJob"
+    const data = {
+      Title: jobTitle.value.toString(),
+      PageCount: pageCount.value.toString(),
+      RasterizationProfile: rasterizationProfile.value.toString()
+    }
+    const response = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+    })
+    if (!response.ok) {
+      console.log("Error fetching data")
+      console.log("Response from server: " + response)
+    } else {
+      message.value = jobTitle.value + " has been created"
+      setTimeout(() => {
+        message.value = ''
+        jobTitle.value = ''
+        pageCount.value = ''
+        rasterizationProfile.value = ''
+        }, 3000);
+    }
   } else {
     message.value = "Job title, page count, and rasterization profile cannot be left blank"
   }
 }
-
 </script>
 
 <template>
@@ -55,30 +52,3 @@ const createJob = () => {
   <p>{{ message }}</p>
 </template>
 
-
-
-<!-- 
-  const url = "http://54.200.253.84:80/createJob"
-  const data = {
-    Title: jobTitle.value,
-    PageCount: pageCount.value,
-    RasterizationProfile: [rasterizationProfile.value]
-  }
-  fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('There was a problem with the fetch operation:', error);
-      })
--->
