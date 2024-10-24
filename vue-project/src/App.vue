@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 const message = ref('')
 const jobTitle = ref('')
 const pageCount = ref('')
@@ -7,6 +7,25 @@ const rasterizationProfile = ref('')
 
 
 const createJob = () => {
+  const url = "http://54.200.253.84:80/createJob"
+  //console.log(jobTitle, pageCount, rasterizationProfile)
+  console.log(jobTitle.value.toString(), pageCount.value.toString(), rasterizationProfile.value.toString())
+  const data = {
+    Title: jobTitle.value.toString(),
+    PageCount: pageCount.value.toString(),
+    RasterizationProfile: rasterizationProfile.value.toString()
+  }
+  const r = fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      })
+  if (!r.ok){
+    console.log(r)
+  }
+  
+    
   if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
     message.value = jobTitle.value + " has been created"
     setTimeout(() => {
@@ -19,10 +38,11 @@ const createJob = () => {
     message.value = "Job title, page count, and rasterization profile cannot be left blank"
   }
 }
+
 </script>
 
 <template>
-  <h1>Create a New Print Job</h1>
+  <h1>Create New Print Job</h1>
   <form @submit.prevent="createJob">
         <label for="jobTitle">Job Title </label>
         <input type="text" id="jobTitle" name="jobTitle" v-model="jobTitle" />
