@@ -12,7 +12,7 @@ const workflows = ref([
 
 const createJob = async () => {
   if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
-    const url = "http://54.200.253.84:80/createJob"
+    const url = "http://api.wsuv-hp-capstone.com:80/createJob"
     const data = {
       Title: jobTitle.value.toString(),
       PageCount: pageCount.value.toString(),
