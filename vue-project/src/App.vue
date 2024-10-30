@@ -1,91 +1,41 @@
-<script setup>
-import { ref, onMounted } from "vue";
-const message = ref('')
-const jobTitle = ref('')
-const pageCount = ref('')
-const rasterizationProfile = ref('')
-const selectedWorkflow = ref(null)
-const workflows = ref([
-      { id: 1, name: 'Default Workflow' }
-    ]);
-
-
-const createJob = async () => {
-  if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
-    const url = "http://api.wsuv-hp-capstone.com:80/createJob"
-    const data = {
-      Title: jobTitle.value.toString(),
-      PageCount: pageCount.value.toString(),
-      RasterizationProfile: rasterizationProfile.value.toString()
-    }
-    const response = await fetch(url, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-    })
-    if (!response.ok) {
-      console.log("Error fetching data")
-      console.log("Response from server: " + response)
-    } else {
-      message.value = jobTitle.value + " has been created"
-      setTimeout(() => {
-        message.value = ''
-        jobTitle.value = ''
-        pageCount.value = ''
-        rasterizationProfile.value = ''
-        }, 3000);
-    }
-  } else {
-    message.value = "Job title, page count, and rasterization profile cannot be left blank"
-  }
-}
-
-const selectWorkflow = async () => {
-  // once API is made for getting default workflow this will send workflow to backend
-  if (selectedWorkflow.value){
-    message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected"
-  } else {
-    message.value = "Please select a workflow"
-  }
-}
-
-</script>
-
 <template>
-  <h1>Create New Print Job</h1>
-  <form @submit.prevent="createJob">
-        <label for="jobTitle">Job Title </label>
-        <input type="text" id="jobTitle" name="jobTitle" v-model="jobTitle" />
+  <v-app>
+    <v-btn label="Open drawer" @click="drawer = !drawer">Open drawer</v-btn>
 
-        <label for="pageCount">  Page Count </label>
-        <input type="text" id="pageCount" name="pageCount" v-model="pageCount" />
+    <v-navigation-drawer :v-model="drawer" theme="light">
+      <v-row class="pa-3">
+        <v-btn icon="$menu"></v-btn>
+      </v-row>
 
-        <label for="rasterizationProfile">  Rasterization Profile </label>
-        <select id="rasterizationProfile" name="rasterizationProfile" v-model="rasterizationProfile">
-          <optgroup label="Standard Color Profiles">
-            <option value="Black">Black</option>
-            <option value="CMY">CMY (Cyan, Magenta, Yellow)</option>
-            <option value="CMYK">CMYK (Cyan, Magenta, Yellow, Black)</option>
-            <option value="RGB">RGB (Red, Green, Blue)</option>
-          </optgroup>
+      <v-row>
+        <v-btn block style="text-align:left;">Print Jobs</v-btn>
+      </v-row>
 
-          <optgroup label="Extended Color Profiles">
-            <option value="CMYKOV">CMYK + Orange + Violet</option>
-            <option value="CMYKOVM1">CMYK + Orange + Violet + Extra Colorant 1</option>
-          </optgroup>
+      <v-row>
+        <v-btn block>Workflows</v-btn>
 
-          <optgroup label="Specialized Profiles">
-            <option value="HighQuality">High Quality (Best Detail)</option>
-            <option value="Draft">Draft (Fast, Low-Quality)</option>
-            <option value="Photographic">Photographic (Rich Color, High Detail)</option>
-            <option value="LineArt">Line Art (Crisp Lines, No Gradients)</option>
-          </optgroup>
-        </select>
-        <button type="submit">Submit Job</button>
-  </form>
+      </v-row>
 
-  <h1>Select A Workflow</h1>
+    </v-navigation-drawer>
+
+    <v-main>
+      <v-banner>Create New Print Job</v-banner>
+      
+      <v-form @submit.prevent="createJob">
+        <v-text-field label="Create Job" v-model="jobTitle" />
+
+        <v-text-field label="Page Count" v-model="pageCount" />
+
+        <v-autocomplete 
+          label="Rasterization Profile" 
+          v-model="rasterizationProfile"
+          :items="['Black','CMY','CMYK','RGB']"
+        >
+        </v-autocomplete>
+        <v-btn label="submit" @click='createJob()'>Submit Job</v-btn>
+  </v-form>
+
+  <!-- <v-banner>Select a Workflow</v-banner>
   <form @submit.prevent="selectWorkflow">
     <label for="selectedWorkflow">Previous Workflows </label>
     <select id="selectedWorkflow" v-model="selectedWorkflow">
@@ -95,19 +45,77 @@ const selectWorkflow = async () => {
     </select>
     <button type="submit">Submit Workflow</button>
   </form>
+ -->
+  <v-alert :v-if="message !== ''">{{ message }}</v-alert>
 
-  <p>{{ message }}</p>
-
+    
+    
+    
+    </v-main>
+  </v-app>
 </template>
 
+<script setup>
+import { ref, onMounted } from "vue";
+const message = ref('');
+const drawer = ref(false);
+const jobTitle = ref('');
+const pageCount = ref('');
+const rasterizationProfile = ref('');
+const selectedWorkflow = ref(null);
+const workflows = ref([
+      { id: 1, name: 'Default Workflow' }
+    ]);
 
-<!-- 
-  Once getting a list of previous workflows is available i will include this instead of the hard coded workflow for now
-onMounted(async () =>{
-  try {
-    GET WORKFLOWS LIST FROM API
-  } catch (error) {
-    console.log('Error fetching previous workflows');
+
+drawer.value = false;
+
+
+//// API CALLS ////
+
+const createJob = async () => {
+  if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
+    const url = "http://54.200.253.84:80/createJob";
+    const data = {
+      Title: jobTitle.value.toString(),
+      PageCount: pageCount.value.toString(),
+      RasterizationProfile: rasterizationProfile.value.toString()
+    }
+
+    const response = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      console.log("Error fetching data")
+      console.log("Response from server: " + response)
+    } else {
+      message.value = jobTitle.value + " has been created"
+      setTimeout(() => {
+        message.value = '';
+        jobTitle.value = '';
+        pageCount.value = '';
+        rasterizationProfile.value = '';
+        }, 3000);
+    }
+  } else {
+    message.value = "Job title, page count, and rasterization profile cannot be left blank";
   }
-})
--->
+}
+
+
+//// OTHER FUNCTIONS ////
+const selectWorkflow = async () => {
+  // once API is made for getting default workflow this will send workflow to backend
+  if (selectedWorkflow.value){
+    message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
+  } else {
+    message.value = "Please select a workflow";
+  }
+}
+
+</script>
+
