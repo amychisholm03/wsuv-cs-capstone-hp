@@ -26,23 +26,23 @@
           <v-btn block tile>Simulation Reports</v-btn>
       </v-row>
 
-
     </v-navigation-drawer>
 
     <v-main>
 
       <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
-        <v-card-title>New Print Job</v-card-title> 
-        <v-form @submit.prevent="createJob">
-          <v-text-field label="Title" v-model="jobTitle" />
-          <v-text-field label="Page Count" v-model="pageCount" />
+        <v-card-title>Create New Print Job Settings</v-card-title> 
+        <v-form ref="printSettingsForm" fast-fail @submit.prevent="createPrintSettings">
+          <v-text-field :rules="titleValidation" label="Title" v-model="printSettings.title" />
+          <v-text-field :rules="pageCountValidation" label="Page Count" type="number" v-model="printSettings.pageCount" />
           <v-autocomplete 
-            label="Rasterization Profile" 
-            v-model="rasterizationProfile"
-            :items="['Black','CMY','CMYK','RGB']"
+            label="Rasterization Profile"
+            :rules="rasterizationProfileValidation" 
+            v-model="printSettings.rasterizationProfile"
+            :items="['Black','CMY','CMYK']"
           >
           </v-autocomplete>
-          <v-btn label="submit" class="mb-2" @click='createJob()'>Submit Job</v-btn>
+          <v-btn type="submit" class="mb-2">Create Print Settings</v-btn>
       </v-form>
       <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
     </v-card>
@@ -72,37 +72,84 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
-
-const message = ref('');
-const drawer = ref(false);
-const jobTitle = ref('');
-const pageCount = ref('');
-const rasterizationProfile = ref('');
-const selectedWorkflow = ref(null);
-const workflows = ref([
-      { id: 1, name: 'Default Workflow' }
-    ]);
-
-
-drawer.value = false;
-
-
-//// ROUTING ////
 const routeTo = (where) => {
   router.push(where);
 };
 
+const message = ref('');
+const drawer = ref(false);
+
+// const selectedWorkflow = ref(null);
+// const workflows = ref([
+//       { id: 1, name: 'Default Workflow' }
+//     ]);
+
+const printSettings = ref(
+  {
+    title: '',
+    pageCount: '',
+    rasterizationProfile: '',
+  }
+);
+
+//// METHODS ////
+const titleValidation = [
+  x => { if (x) return true; return 'Title can not be left empty';}
+];
+
+
+const pageCountValidation = [
+  x => { if (x) return true; return 'Page count must be non-zero.';}
+];
+
+const rasterizationProfileValidation = [
+  x => { if (x) return true; return 'Rasterization Profile can not be left empty.';}
+];
+
+const validateCreatePrintSettings = () => {
+  const errors = [];
+
+  titleValidation.forEach(rule => {
+    const result = rule(printSettings.value.title);
+    if (typeof result === "string"){
+      errors.push(result);
+    }
+  });
+
+  pageCountValidation.forEach(rule => {
+    const result = rule(printSettings.value.pageCount);
+    if (typeof result === "string"){
+      errors.push(result);
+    }
+
+  });
+
+  rasterizationProfileValidation.forEach(rule => {
+    const result = rule(printSettings.value.rasterizationProfile);
+    if (typeof result === "string"){
+      errors.push(result);
+    }
+  });
+
+  if (errors.length > 0){
+    return false;
+  }
+  return true;
+}
 
 //// API CALLS ////
-
-const createJob = async () => {
-  if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
-    const url = "http://54.200.253.84:80/createJob";
+const createPrintSettings = async () => {
+  if (!validateCreatePrintSettings()){
+    return false;
+  }   
+  
+  const url = "http://54.200.253.84:80/createJob";
     const data = {
-      Title: jobTitle.value.toString(),
-      PageCount: pageCount.value.toString(),
-      RasterizationProfile: rasterizationProfile.value.toString()
+      Title: printSettings.value.title.toString(),
+      PageCount: printSettings.value.pageCount.toString(),
+      RasterizationProfile: printSettings.value.rasterizationProfile.toString()
     }
 
     const response = await fetch(url, {
@@ -116,29 +163,22 @@ const createJob = async () => {
       console.log("Error fetching data")
       console.log("Response from server: " + response)
     } else {
-      message.value = jobTitle.value + " has been created"
+      message.value = printSettings.value.title + " has been created"
       setTimeout(() => {
         message.value = '';
-        jobTitle.value = '';
-        pageCount.value = '';
-        rasterizationProfile.value = '';
         }, 3000);
     }
-  } else {
-    message.value = "Job title, page count, and rasterization profile cannot be left blank";
-  }
 }
-
 
 //// OTHER FUNCTIONS ////
-const selectWorkflow = async () => {
-  // once API is made for getting default workflow this will send workflow to backend
-  if (selectedWorkflow.value){
-    message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
-  } else {
-    message.value = "Please select a workflow";
-  }
-}
+// const selectWorkflow = async () => {
+//   // once API is made for getting default workflow this will send workflow to backend
+//   if (selectedWorkflow.value){
+//     message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
+//   } else {
+//     message.value = "Please select a workflow";
+//   }
+// }
 
 </script>
 
@@ -165,6 +205,5 @@ const selectWorkflow = async () => {
 .dashboard-container{
   max-width: 400px;
 }
-
 
 </style>
