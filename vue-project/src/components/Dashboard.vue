@@ -8,7 +8,7 @@
     <v-navigation-drawer temporary v-model="drawer" theme="light">
       
       <v-row class="pa-4">
-          <v-btn block tile color="blue" @click="routeTo('/')">Dashboard</v-btn>
+          <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
       </v-row>
 
       <v-row>
@@ -16,7 +16,7 @@
       </v-row>
 
       <v-row>
-          <v-btn block tile>Workflows</v-btn>
+          <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
       </v-row>
 
 
