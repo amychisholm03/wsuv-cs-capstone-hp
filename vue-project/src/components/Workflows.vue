@@ -112,7 +112,7 @@
     ];
 
     const selectedStepsValidation = [
-        x => { if (x) return true; return 'Workflow must contain at least one step'}
+        x => { if (x.length !== 0) return true; return 'Workflow must contain at least one step'}
     ];
 
     const validateSelectedWorkflow = () => {
