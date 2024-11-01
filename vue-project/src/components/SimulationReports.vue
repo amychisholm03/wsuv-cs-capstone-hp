@@ -25,15 +25,26 @@
         </v-navigation-drawer>
 
         <v-main>
-            <v-card class="ma-3 pa-3" style="width:85vw; border-width:2px;">
+            <v-card class="ma-3 pa-3" style="border-width:2px;">
                 <v-card-title>Generate a Simulation Report for a Print Job</v-card-title>
                 <v-form ref="simulationReportForm" fast-fail @submit.prevent="getSimulationReport">
-                    <v-text-field :rules="titleValidation" label="Print Job Title/Name" v-model="printJobTitle" />
-                    <v-btn type="submit" class="mb-2">Generate Report</v-btn>
+                    <v-row>
+                        <v-col cols="5">
+                            <v-text-field :rules="titleValidation" label="Print Job Title/Name"
+                                v-model="printJobTitle" />
+                        </v-col>
+                        <v-col cols="5">
+                            <v-text-field :rules="titleValidation" label="Workflow Title/Name"
+                                v-model="workflowTitle" />
+                        </v-col>
+                        <v-col cols="2" class="d-flex justify-center align-center">
+                            <v-btn type="submit" class="mb-2" color="primary">Generate Report</v-btn>
+                        </v-col>
+                    </v-row>
                 </v-form>
                 <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
             </v-card>
-            <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
+            <v-card class="ma-3 pa-3" style="border-width:2px;">
                 <v-card-title>Previous Simulation Reports</v-card-title>
                 <v-list>
                     <v-list-item v-for="(report, index) in simulationReports" :key="index">
@@ -62,6 +73,7 @@ const routeTo = (where) => {
 const message = ref('');
 const drawer = ref(false);
 const printJobTitle = ref('');
+const workflowTitle = ref('');
 const simulationReports = ref([]);
 
 const titleValidation = [
@@ -70,14 +82,18 @@ const titleValidation = [
 
 const getSimulationReport = async () => {
     if (!titleValidation[0](printJobTitle.value)) {
-        message.value = 'Title cannot be left empty';
+        message.value = 'Print job cannot be left empty';
+        return;
+    }
+    if (!titleValidation[0](workflowTitle.value)) {
+        message.value = 'Workflow cannot be left empty';
         return;
     }
 
     //TODO: make title and workflow not hardcoded
-    const title = "PrintJob 1"; //printJobTitle.value.toString(); 
+    const job = "PrintJob 1"; //printJobTitle.value.toString(); 
     const workflow = "Workflow 1";
-    const apiUrl = `http://api.wsuv-hp-capstone.com/getSimulationReport?title=${encodeURIComponent(title)}&workflow=${encodeURIComponent(workflow)}`;
+    const apiUrl = `http://api.wsuv-hp-capstone.com/getSimulationReport?title=${encodeURIComponent(job)}&workflow=${encodeURIComponent(workflow)}`;
 
     await fetch(apiUrl)
         .then(response => response.json())
@@ -87,9 +103,8 @@ const getSimulationReport = async () => {
                 return key.toLowerCase().includes("id") ? undefined : value;
             });
             const report = JSON.stringify(cleanData["SimulationReport"], null, 2);
-            message.value = "Simulation Report for '" + title + "' generated."; // For displaying raw JSON as a string
-            simulationReports.value.push({ title: `${title} with ${workflow}`, details: report });
-
+            message.value = "Simulation Report for '" + job + "' generated.";
+            simulationReports.value.push({ title: `${job} with ${workflow}`, details: report });
         })
         .catch(error => {
             message.value = 'Failed to generate report: ' + error;
