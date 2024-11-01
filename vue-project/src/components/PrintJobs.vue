@@ -1,26 +1,24 @@
 <template>
   <v-app theme="light">
-
     <v-toolbar>
         <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
         <v-toolbar-title>Print Jobs</v-toolbar-title>
     </v-toolbar> 
 
     <v-navigation-drawer temporary v-model="drawer" theme="light">
-      <v-row class="pa-4">
-          <v-btn block tile color="blue" @click="routeTo('/')">Dashboard</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile>Simulation Reports</v-btn>
-      </v-row>
+        <v-row class="pa-4">
+            <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
+        </v-row>
+        <v-row>
+            <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
+        </v-row>
+        <v-row>
+            <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
+        </v-row>
+        <v-row>
+            <v-btn block tile>Simulation Reports</v-btn>
+        </v-row>
     </v-navigation-drawer>
-
     <v-main>
       <v-card class="ma-3 pa-3" style="width:85vw; height:600px; border-width:2px;">
         <v-card-title>Create New Print Job Settings</v-card-title> 
@@ -42,27 +40,10 @@
           </v-select>
 
           <v-btn type="submit" class="mb-2">Create Print Settings</v-btn>
-      </v-form>
-      <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
-    </v-card>
- 
-    <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
-      <v-card-title>Print Job History</v-card-title>
-    </v-card>
-
-  <!-- <v-banner>Select a Workflow</v-banner>
-  <form @submit.prevent="selectWorkflow">
-    <label for="selectedWorkflow">Previous Workflows </label>
-    <select id="selectedWorkflow" v-model="selectedWorkflow">
-      <option v-for="option in workflows" :key="option.id" :value="option">
-          {{ option.name }}
-        </option>
-    </select>
-    <button type="submit">Submit Workflow</button>
-  </form>
- -->
+        </v-form>
+        <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
+      </v-card>
     </v-main>
-
   </v-app>
 </template>
 
@@ -77,11 +58,6 @@
 
   const message = ref('');
   const drawer = ref(false);
-
-  // const selectedWorkflow = ref(null);
-  // const workflows = ref([
-  //       { id: 1, name: 'Default Workflow' }
-  //     ]);
 
   const printSettings = ref(
     {
@@ -155,41 +131,31 @@
     if (!validateCreatePrintSettings()){
       return false;
     }   
-    
+
     const url = "http://54.200.253.84:80/createJob";
-      const data = {
-        Title: printSettings.value.title.toString(),
-        PageCount: printSettings.value.pageCount.toString(),
-        RasterizationProfile: printSettings.value.rasterizationProfile.toString()
-      }
+    const data = {
+      Title: printSettings.value.title.toString(),
+      PageCount: printSettings.value.pageCount.toString(),
+      RasterizationProfile: printSettings.value.rasterizationProfile.toString()
+    }
 
-      const response = await fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-      });
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
 
-      if (!response.ok) {
-        console.log("Error fetching data")
-        console.log("Response from server: " + response)
-      } else {
-        message.value = printSettings.value.title + " has been created"
-        setTimeout(() => {
-          message.value = '';
-          }, 3000);
-      }
+    if (!response.ok) {
+      console.log("Error fetching data")
+      console.log("Response from server: " + response)
+    } else {
+      message.value = printSettings.value.title + " has been created"
+      setTimeout(() => {
+        message.value = '';
+        }, 3000);
+    }
   }
-
-  //// OTHER FUNCTIONS ////
-  // const selectWorkflow = async () => {
-  //   // once API is made for getting default workflow this will send workflow to backend
-  //   if (selectedWorkflow.value){
-  //     message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
-  //   } else {
-  //     message.value = "Please select a workflow";
-  //   }
-  // }
 
 </script>
 
