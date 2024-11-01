@@ -26,7 +26,7 @@
 
         <v-main>
             <v-card class="ma-3 pa-3" style="width:85vw; border-width:2px;">
-                <v-card-title>Get a Simulation Report from a Print Job</v-card-title>
+                <v-card-title>Generate a Simulation Report for a Print Job</v-card-title>
                 <v-form ref="simulationReportForm" fast-fail @submit.prevent="getSimulationReport">
                     <v-text-field :rules="titleValidation" label="Print Job Title/Name" v-model="printJobTitle" />
                     <v-btn type="submit" class="mb-2">Generate Report</v-btn>
@@ -35,6 +35,14 @@
             </v-card>
             <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
                 <v-card-title>Previous Simulation Reports</v-card-title>
+                <v-list>
+                    <v-list-item v-for="(report, index) in simulationReports" :key="index">
+                        <v-list-item-content>
+                            <v-list-item-title>{{ report.title }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ report.details }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
             </v-card>
         </v-main>
     </v-app>
@@ -44,14 +52,17 @@
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
 
+// Router
 const router = useRouter();
 const routeTo = (where) => {
     router.push(where);
 };
 
+// Component refs
 const message = ref('');
 const drawer = ref(false);
 const printJobTitle = ref('');
+const simulationReports = ref([]);
 
 const titleValidation = [
     x => { if (x) return true; return false; }
@@ -71,10 +82,21 @@ const getSimulationReport = async () => {
     await fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            message.value = JSON.stringify(data, null, 2); // For displaying raw JSON as a string
+            // Remove fields with "id" in them
+            const cleanData = JSON.parse(JSON.stringify(data), (key, value) => {
+                return key.toLowerCase().includes("id") ? undefined : value;
+            });
+            const report = JSON.stringify(cleanData["SimulationReport"], null, 2);
+            message.value = "Simulation Report for '" + title + "' generated."; // For displaying raw JSON as a string
+            simulationReports.value.push({ title: `${title} with ${workflow}`, details: report });
+
         })
         .catch(error => {
             message.value = 'Failed to generate report: ' + error;
+        }).finally(() => {
+            setTimeout(() => {
+                message.value = '';
+            }, 3000);
         });
 }
 </script>
