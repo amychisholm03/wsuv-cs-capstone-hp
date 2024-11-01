@@ -1,58 +1,55 @@
 <template>
   <v-app theme="light">
     <v-toolbar>
-        <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
-        <v-toolbar-title>Dashboard</v-toolbar-title>
-    </v-toolbar> 
-    
+      <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer = !drawer"></v-btn>
+      <v-toolbar-title>Dashboard</v-toolbar-title>
+    </v-toolbar>
+
+    <!-- Sidebar -->
     <v-navigation-drawer temporary v-model="drawer" theme="light">
-      
       <v-row class="pa-4">
-          <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
+        <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
       </v-row>
 
       <v-row>
-          <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
+        <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
       </v-row>
 
       <v-row>
-          <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
+        <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
       </v-row>
-
 
       <v-row>
-          <v-btn block tile>Simulation Reports</v-btn>
+        <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
       </v-row>
-
-
     </v-navigation-drawer>
 
     <v-main>
       <v-container class="pa-3 ma-3">
         <v-row>
-            <v-card class="ma-3 dashboard-component">
-              <v-toolbar class="pa-2">Component 1</v-toolbar>
+          <v-card class="ma-3 dashboard-component">
+            <v-toolbar class="pa-2">Component 1</v-toolbar>
 
-            </v-card>
+          </v-card>
 
-            <v-card class="ma-3 dashboard-component" >
-              <v-toolbar class="pa-2">Component 2</v-toolbar>
+          <v-card class="ma-3 dashboard-component">
+            <v-toolbar class="pa-2">Component 2</v-toolbar>
 
-            </v-card>
+          </v-card>
         </v-row>
 
         <v-row>
-            <v-card class="ma-3 dashboard-component">
-              <v-toolbar class="pa-2">Component 3</v-toolbar>
+          <v-card class="ma-3 dashboard-component">
+            <v-toolbar class="pa-2">Component 3</v-toolbar>
 
-            </v-card>
+          </v-card>
 
-            <v-card class="ma-3 dashboard-component" >
-              <v-toolbar class="pa-2">Component 4</v-toolbar>
+          <v-card class="ma-3 dashboard-component">
+            <v-toolbar class="pa-2">Component 4</v-toolbar>
 
-            </v-card>
+          </v-card>
         </v-row>
- 
+
 
 
 
@@ -106,8 +103,8 @@ const pageCount = ref('');
 const rasterizationProfile = ref('');
 const selectedWorkflow = ref(null);
 const workflows = ref([
-      { id: 1, name: 'Default Workflow' }
-    ]);
+  { id: 1, name: 'Default Workflow' }
+]);
 
 
 drawer.value = false;
@@ -121,7 +118,7 @@ const routeTo = (where) => {
 //// API CALLS ////
 
 const createJob = async () => {
-  if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== ''){
+  if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== '') {
     const url = "http://54.200.253.84:80/createJob";
     const data = {
       Title: jobTitle.value.toString(),
@@ -130,10 +127,10 @@ const createJob = async () => {
     }
 
     const response = await fetch(url, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
 
     if (!response.ok) {
@@ -146,7 +143,7 @@ const createJob = async () => {
         jobTitle.value = '';
         pageCount.value = '';
         rasterizationProfile.value = '';
-        }, 3000);
+      }, 3000);
     }
   } else {
     message.value = "Job title, page count, and rasterization profile cannot be left blank";
@@ -157,7 +154,7 @@ const createJob = async () => {
 //// OTHER FUNCTIONS ////
 const selectWorkflow = async () => {
   // once API is made for getting default workflow this will send workflow to backend
-  if (selectedWorkflow.value){
+  if (selectedWorkflow.value) {
     message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
   } else {
     message.value = "Please select a workflow";
@@ -167,28 +164,25 @@ const selectWorkflow = async () => {
 </script>
 
 <style>
-
-.drawer-button{
+.drawer-button {
   text-align: left;
 }
 
-.exit-button{
-  border:none;
-  padding:0;
+.exit-button {
+  border: none;
+  padding: 0;
   box-shadow: none;
   background: transparent;
 }
 
 
-.dashboard-component{
-  border:1px;
+.dashboard-component {
+  border: 1px;
   width: 400px;
   height: 400px;
 }
 
-.dashboard-container{
+.dashboard-container {
   max-width: 400px;
 }
-
-
 </style>
