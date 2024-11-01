@@ -39,7 +39,7 @@
 
                     <v-btn type="submit" class="mb-2">Select Workflow</v-btn>
                 </v-form>
-                <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
+                <v-alert class="mt-2" style="background-color:white;">{{ message1 }}</v-alert>
             </v-card>
 
             <v-card class="ma-3 pa-3" style="width:85vw; height:330px; border-width:2px;">
@@ -66,7 +66,7 @@
                         </template>
                     </v-select>
                     <v-btn type="submit" class="mb-2">Create Workflow</v-btn>
-                    <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
+                    <v-alert class="mt-2" style="background-color:white;">{{ message2 }}</v-alert>
                 </v-form>
             </v-card>
         </v-main>
@@ -82,7 +82,8 @@
         router.push(where);
     };
 
-    const message = ref('');
+    const message1 = ref('');
+    const message2 = ref('');
     const drawer = ref(false);
 
     const selectedWorkflow = ref(null);
@@ -162,9 +163,9 @@
         
         // once API is made this will send selected workflow to backend
         const workflow = previousWorkflows.value.find(workflow => workflow.id === selectedWorkflow.value)
-        message.value = workflow.name + " has been selected"
+        message1.value = workflow.name + " has been selected"
         setTimeout(() => {
-          message.value = '';
+          message1.value = '';
         }, 3000);
         
     }
@@ -180,9 +181,9 @@
             Steps: ""
         }
         // once API is made this will send workflow to backend
-        message.value = "The following steps have been selected: " + selectedSteps.value 
+        message2.value = "The following steps have been selected: " + selectedSteps.value 
         setTimeout(() => {
-          message.value = '';
+          message2.value = '';
         }, 3000);
     }
 
