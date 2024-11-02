@@ -35,5 +35,6 @@ jobs:
             key: ${{ secrets.EC2_SSH_KEY }}
             script: |
                   cd /var/www/html/vue-project
+                  sudo rm -rf node_modules
                   sudo npm install
                   sudo npm run build
