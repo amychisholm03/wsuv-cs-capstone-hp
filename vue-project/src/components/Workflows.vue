@@ -2,7 +2,7 @@
     <v-app theme="light">
         <v-toolbar>
             <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
-            <v-toolbar-title>Workflows</v-toolbar-title>
+            <v-toolbar-title>Define Workflow</v-toolbar-title>
         </v-toolbar> 
 
         <!-- Sidebar -->
@@ -10,45 +10,25 @@
             <v-row class="pa-4">
                 <v-btn block tile color="blue" @click="routeTo('/')">Dashboard</v-btn>
             </v-row>
-
             <v-row>
-                <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
+                <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
             </v-row>
-
             <v-row>
-                <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
+                <v-btn block tile @click="routeTo('/Workflows')">Define Workflow</v-btn>
             </v-row>
-
+            <v-row>
+                <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
+            </v-row>
             <v-row>
                 <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
             </v-row>
+
         </v-navigation-drawer>
         <v-main>
-            <v-card class="ma-3 pa-3" style="width:85vw; height:250px; border-width:2px;">
-                <v-card-title>Select Previous Workflow</v-card-title> 
-                <v-form ref="selectPreviousWorkflowForm" fast-fail @submit.prevent="selectPreviousWorkflow">
-                    <v-select
-                        v-model="selectedWorkflow"
-                        :rules="selectedWorkflowValidation"
-                        :items="previousWorkflows"
-                        label="Previous Workflows"
-                        item-title="name"
-                        item-value="id"
-                        outlined
-                    >
-                        <template v-slot:item="{ props, item }">
-                            <v-list-item v-bind="props" ></v-list-item>
-                        </template>
-                    </v-select>
-                    <v-btn type="submit" class="mb-2">Select Workflow</v-btn>
-                </v-form>
-                <v-alert class="mt-2" style="background-color:white;">{{ message1 }}</v-alert>
-            </v-card>
-
-            <v-card class="ma-3 pa-3" style="width:85vw; height:330px; border-width:2px;">
+            <v-card class="ma-3 pa-3" style="width:85vw; height:350px; border-width:2px;">
                 <v-card-title>Create New Workflow</v-card-title>
                 <v-form ref="createWorkflowForm" fast-fail @submit.prevent="createWorkflow">
-                    <v-text-field :rules="titleValidation" label="Title" v-model="workflowTitle" />
+                    <v-text-field :rules="workflowTitleValidation" label="Workflow Title" v-model="workflowTitle" />
                     <v-select
                         v-model="selectedSteps"
                         :rules="selectedStepsValidation"
@@ -68,8 +48,8 @@
                             </span>
                         </template>
                     </v-select>
-                    <v-btn type="submit" class="mb-2">Create Workflow</v-btn>
-                    <v-alert class="mt-2" style="background-color:white;">{{ message2 }}</v-alert>
+                    <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">Create Workflow</v-btn>
+                    <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
                 </v-form>
             </v-card>
         </v-main>
@@ -85,14 +65,9 @@
         router.push(where);
     };
 
-    const message1 = ref('');
-    const message2 = ref('');
+    const message = ref('');
     const drawer = ref(false);
 
-    const selectedWorkflow = ref(null);
-    const previousWorkflows = ref([
-            { id: 1, name: 'Default Workflow' }
-    ]);
     const workflowTitle = ref('');
     const selectedSteps = ref(null);
     const workflowSteps = ref([
@@ -106,36 +81,17 @@
 
 
     //// METHODS ////
-    const selectedWorkflowValidation = [
-        x => { if (x) return true; return 'Workflow must be selected or created';}
-    ];
-
-    const titleValidation = [
+    const workflowTitleValidation = [
         x => { if (x) return true; return 'Workflow title cannot not be left empty'}
     ];
 
     const selectedStepsValidation = [
-        x => { if (x.length !== 0) return true; return 'Workflow must contain at least one step'}
+        x => { if (x && x.length !== 0) return true; return 'Workflow must contain at least one step'}
     ];
-
-    const validateSelectedWorkflow = () => {
-        const errors = []; 
-        selectedWorkflowValidation.forEach(rule => {
-            const result = rule(selectedWorkflow.value);
-            if (typeof result === "string"){
-                errors.push(result);
-            }     
-        });
-
-        if (errors.length > 0){
-            return false;
-        }
-        return true;  
-    }
 
     const validateCreatedWorkflow = () => {
         const errors = []; 
-        titleValidation.forEach(rule => {
+        workflowTitleValidation.forEach(rule => {
             const result = rule(workflowTitle.value);
             if (typeof result === "string"){
                 errors.push(result);
@@ -158,36 +114,33 @@
     }
 
 //// API CALLS ////
-
-    const selectPreviousWorkflow = async () => {
-        if (!validateSelectedWorkflow()){
-            return false;
-        } 
-        
-        // once API is made this will send selected workflow to backend
-        const workflow = previousWorkflows.value.find(workflow => workflow.id === selectedWorkflow.value)
-        message1.value = workflow.name + " has been selected"
-        setTimeout(() => {
-          message1.value = '';
-        }, 3000);
-        
-    }
-
+    
     const createWorkflow = async () => {
         if (!validateCreatedWorkflow()){
             return false;
         }
-
-        
+        const url = "http://api.wsuv-hp-capstone.com:80/createWorkflow";
         const data = {
             Title: workflowTitle.value.toString(),
-            Steps: ""
+            Steps: selectedSteps.value,
         }
-        // once API is made this will send workflow to backend
-        message2.value = "The following steps have been selected: " + selectedSteps.value 
-        setTimeout(() => {
-          message2.value = '';
-        }, 3000);
+
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            console.log("Error fetching data")
+            console.log("Response from server: " + response)
+        } else {
+            message.value = workflowTitle.value + " has been created"
+            setTimeout(() => {
+                message.value = '';
+            }, 3000);
+        }
     }
 </script>
 
@@ -213,6 +166,10 @@
 
     .dashboard-container{
     max-width: 400px;
+    }
+
+    .v-btn{
+        margin: 0 5px;
     }
 
 </style>
