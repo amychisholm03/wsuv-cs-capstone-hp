@@ -17,7 +17,7 @@
           <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
       </v-row>
       <v-row>
-          <v-btn block tile>Simulation Reports</v-btn>
+          <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
       </v-row>
     </v-navigation-drawer>
     <v-main>

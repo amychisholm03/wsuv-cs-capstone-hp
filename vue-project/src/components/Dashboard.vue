@@ -49,43 +49,38 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from 'vue-router';
+  import { ref, onMounted } from "vue";
+  import { useRouter } from 'vue-router';
 
-const drawer = ref(false);
-drawer.value = false;
+  const drawer = ref(false);
+  const router = useRouter();
 
-const router = useRouter();
-
-const drawer = ref(false);
-drawer.value = false;
-
-//// ROUTING ////
-const routeTo = (where) => {
-  router.push(where);
-};
+  //// ROUTING ////
+  const routeTo = (where) => {
+    router.push(where);
+  };
 </script>
 
 <style>
-.drawer-button {
-  text-align: left;
-}
+  .drawer-button {
+    text-align: left;
+  }
 
-.exit-button {
-  border: none;
-  padding: 0;
-  box-shadow: none;
-  background: transparent;
-}
+  .exit-button {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+  }
 
 
-.dashboard-component {
-  border: 1px;
-  width: 400px;
-  height: 400px;
-}
+  .dashboard-component {
+    border: 1px;
+    width: 400px;
+    height: 400px;
+  }
 
-.dashboard-container {
-  max-width: 400px;
-}
+  .dashboard-container {
+    max-width: 400px;
+  }
 </style>
