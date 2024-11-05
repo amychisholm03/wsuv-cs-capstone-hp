@@ -4,20 +4,23 @@
         <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
         <v-toolbar-title>Dashboard</v-toolbar-title>
     </v-toolbar> 
-
+    
     <v-navigation-drawer temporary v-model="drawer" theme="light">
-        <v-row class="pa-4">
-            <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
-        </v-row>
-        <v-row>
-            <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
-        </v-row>
-        <v-row>
-            <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
-        </v-row>
-        <v-row>
-            <v-btn block tile>Simulation Reports</v-btn>
-        </v-row>
+      <v-row class="pa-4">
+        <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
+      </v-row>
+
+      <v-row>
+        <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
+      </v-row>
+
+      <v-row>
+        <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
+      </v-row>
+
+      <v-row>
+        <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
+      </v-row>
     </v-navigation-drawer>
     <v-main>
       <v-container class="pa-3 ma-3">
@@ -54,6 +57,8 @@ drawer.value = false;
 
 const router = useRouter();
 
+const drawer = ref(false);
+drawer.value = false;
 
 //// ROUTING ////
 const routeTo = (where) => {
@@ -62,28 +67,25 @@ const routeTo = (where) => {
 </script>
 
 <style>
-
-.drawer-button{
+.drawer-button {
   text-align: left;
 }
 
-.exit-button{
-  border:none;
-  padding:0;
+.exit-button {
+  border: none;
+  padding: 0;
   box-shadow: none;
   background: transparent;
 }
 
 
-.dashboard-component{
-  border:1px;
+.dashboard-component {
+  border: 1px;
   width: 400px;
   height: 400px;
 }
 
-.dashboard-container{
+.dashboard-container {
   max-width: 400px;
 }
-
-
 </style>

@@ -5,18 +5,22 @@
             <v-toolbar-title>Workflows</v-toolbar-title>
         </v-toolbar> 
 
+        <!-- Sidebar -->
         <v-navigation-drawer temporary v-model="drawer" theme="light">
             <v-row class="pa-4">
-                <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
+                <v-btn block tile color="blue" @click="routeTo('/')">Dashboard</v-btn>
             </v-row>
+
             <v-row>
                 <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
             </v-row>
+
             <v-row>
                 <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
             </v-row>
+
             <v-row>
-                <v-btn block tile>Simulation Reports</v-btn>
+                <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
             </v-row>
         </v-navigation-drawer>
         <v-main>
@@ -36,7 +40,6 @@
                             <v-list-item v-bind="props" ></v-list-item>
                         </template>
                     </v-select>
-
                     <v-btn type="submit" class="mb-2">Select Workflow</v-btn>
                 </v-form>
                 <v-alert class="mt-2" style="background-color:white;">{{ message1 }}</v-alert>
@@ -88,7 +91,7 @@
 
     const selectedWorkflow = ref(null);
     const previousWorkflows = ref([
-           { id: 1, name: 'Default Workflow' }
+            { id: 1, name: 'Default Workflow' }
     ]);
     const workflowTitle = ref('');
     const selectedSteps = ref(null);
@@ -154,7 +157,7 @@
 
     }
 
-    //// API CALLS ////
+//// API CALLS ////
 
     const selectPreviousWorkflow = async () => {
         if (!validateSelectedWorkflow()){
@@ -186,7 +189,6 @@
           message2.value = '';
         }, 3000);
     }
-
 </script>
 
 

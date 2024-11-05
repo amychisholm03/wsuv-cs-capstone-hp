@@ -1,0 +1,21 @@
+name: Frontend CI
+on:
+    push:
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - uses: actions/checkout@v4
+        - name: Use Node.js 20
+
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
+
+        - name: Install Dependencies
+          run: cd vue-project && npm install
+
+        - name: Run Linter
+          run: cd vue-project && npm run lint
