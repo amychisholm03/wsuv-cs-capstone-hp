@@ -1,33 +1,31 @@
 <template>
   <v-app theme="light">
-
     <v-toolbar>
       <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer = !drawer"></v-btn>
-      <v-toolbar-title>Print Jobs</v-toolbar-title>
+      <v-toolbar-title>Create Print Jobs</v-toolbar-title>
     </v-toolbar>
 
     <!-- Sidebar -->
     <v-navigation-drawer temporary v-model="drawer" theme="light">
       <v-row class="pa-4">
-        <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
+          <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
       </v-row>
-
       <v-row>
-        <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
+          <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
       </v-row>
-
       <v-row>
-        <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
+          <v-btn block tile @click="routeTo('/Workflows')">Define Workflow</v-btn>
       </v-row>
-
       <v-row>
-        <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
+          <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
+      </v-row>
+      <v-row>
+          <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
       </v-row>
     </v-navigation-drawer>
-
     <v-main>
-      <v-card class="ma-3 pa-3" style="width:85vw; height:600px; border-width:2px;">
-        <v-card-title>Create New Print Job Settings</v-card-title>
+      <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
+        <v-card-title>Create New Print Job</v-card-title>
         <v-form ref="printSettingsForm" fast-fail @submit.prevent="createPrintSettings">
           <v-text-field :rules="titleValidation" label="Title" v-model="printSettings.title" />
           <v-text-field :rules="pageCountValidation" label="Page Count" type="number"
@@ -40,28 +38,16 @@
             </template>
           </v-select>
 
-          <v-btn type="submit" class="mb-2">Create Print Settings</v-btn>
+          <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">Create Print Job</v-btn>
         </v-form>
         <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
       </v-card>
-
-      <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
-        <v-card-title>Print Job History</v-card-title>
+      <!--
+      <v-card class="ma-3 pa-3" style="width:85vw; height:300px; border-width:2px;">
+        <v-card-title>Previous Print Jobs</v-card-title>
       </v-card>
-
-      <!-- <v-banner>Select a Workflow</v-banner>
-  <form @submit.prevent="selectWorkflow">
-    <label for="selectedWorkflow">Previous Workflows </label>
-    <select id="selectedWorkflow" v-model="selectedWorkflow">
-      <option v-for="option in workflows" :key="option.id" :value="option">
-          {{ option.name }}
-        </option>
-    </select>
-    <button type="submit">Submit Workflow</button>
-  </form>
- -->
+     -->
     </v-main>
-
   </v-app>
 </template>
 
@@ -77,11 +63,6 @@ const routeTo = (where) => {
 const message = ref('');
 const drawer = ref(false);
 
-// const selectedWorkflow = ref(null);
-// const workflows = ref([
-//       { id: 1, name: 'Default Workflow' }
-//     ]);
-
 const printSettings = ref(
   {
     title: '',
@@ -92,17 +73,15 @@ const printSettings = ref(
       { text: 'CMY (Cyan, Magenta, Yellow)', value: 'CMY', profile: 'Standard Color Profile' },
       { text: 'CMYK (Cyan, Magenta, Yellow, Black)', value: 'CMYK', profile: 'Standard Color Profile' },
       { text: 'RGB (Red, Green, Blue)', value: 'RGB', profile: 'Standard Color Profile' },
-
       { text: 'CMYK + Orange + Violet', value: 'CMYKOV', profile: 'Extended Color Profile' },
       { text: 'CMYK + Orange + Violet + Extra Colorant 1', value: 'CMYKOVM1', profile: 'Extended Color Profile' },
-
       { text: 'High Quality (Best Detail)', value: 'HighQuality', profile: 'Specialized Profile' },
       { text: 'Draft (Fast, Low-Quality)', value: 'Draft', profile: 'Specialized Profile' },
       { text: 'Photographic (Rich Color, High Detail)', value: 'Photographic', profile: 'Specialized Profile' },
       { text: 'Line Art (Crisp Lines, No Gradients)', value: 'LineArt', profile: 'Specialized Profile' },
     ],
-  }
-);
+  });
+
 
 //// METHODS ////
 const titleValidation = [
@@ -149,47 +128,36 @@ const validateCreatePrintSettings = () => {
   return true;
 }
 
-//// API CALLS ////
-const createPrintSettings = async () => {
-  if (!validateCreatePrintSettings()) {
-    return false;
+  //// API CALLS ////
+  const createPrintSettings = async () => {
+    if (!validateCreatePrintSettings()){
+      return false;
+    }   
+
+    const url = "http://api.wsuv-hp-capstone.com:80/createJob";
+    const data = {
+      Title: printSettings.value.title.toString(),
+      PageCount: printSettings.value.pageCount.toString(),
+      RasterizationProfile: printSettings.value.rasterizationProfile.toString()
+    }
+
+    const response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      console.log("Error fetching data")
+      console.log("Response from server: " + response)
+    } else {
+      message.value = printSettings.value.title + " has been created"
+      setTimeout(() => {
+        message.value = '';
+        }, 3000);
+    }
   }
-
-  const url = "http://54.200.253.84:80/createJob";
-  const data = {
-    Title: printSettings.value.title.toString(),
-    PageCount: printSettings.value.pageCount.toString(),
-    RasterizationProfile: printSettings.value.rasterizationProfile.toString()
-  }
-
-  const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-
-  if (!response.ok) {
-    console.log("Error fetching data")
-    console.log("Response from server: " + response)
-  } else {
-    message.value = printSettings.value.title + " has been created"
-    setTimeout(() => {
-      message.value = '';
-    }, 3000);
-  }
-}
-
-//// OTHER FUNCTIONS ////
-// const selectWorkflow = async () => {
-//   // once API is made for getting default workflow this will send workflow to backend
-//   if (selectedWorkflow.value){
-//     message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
-//   } else {
-//     message.value = "Please select a workflow";
-//   }
-// }
-
 </script>
 
 <style>
@@ -203,7 +171,6 @@ const createPrintSettings = async () => {
   box-shadow: none;
   background: transparent;
 }
-
 
 .dashboard-component {
   border: 1px;

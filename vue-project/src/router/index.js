@@ -10,12 +10,14 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import Dashboard from '@/components/Dashboard.vue'
 import PrintJobs from '@/components/PrintJobs.vue'
 import Workflows from '@/components/Workflows.vue'
+import SubmitJobs from '@/components/SubmitJobs.vue'
 import SimulationReports from '@/components/SimulationReports.vue'
 
 const routes = [
 	{ path: '/', component: Dashboard},
 	{ path: '/PrintJobs', component: PrintJobs},
   { path: '/Workflows', component: Workflows},
+  { path: '/SubmitJobs', component: SubmitJobs},
   { path: '/SimulationReports', component: SimulationReports},
 ];
 
