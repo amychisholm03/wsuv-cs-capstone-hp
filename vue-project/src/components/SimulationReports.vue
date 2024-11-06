@@ -10,15 +10,15 @@
             <v-row class="pa-4">
                 <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
             </v-row>
-
             <v-row>
-                <v-btn block tile @click="routeTo('/PrintJobs')">Print Jobs</v-btn>
+                <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
             </v-row>
-
             <v-row>
-                <v-btn block tile @click="routeTo('/Workflows')">Workflows</v-btn>
+                <v-btn block tile @click="routeTo('/Workflows')">Define Workflows</v-btn>
             </v-row>
-
+            <v-row>
+                <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
+            </v-row>
             <v-row>
                 <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
             </v-row>
@@ -26,7 +26,7 @@
 
         <v-main>
             <v-card class="ma-3 pa-3" style="border-width:2px;">
-                <v-card-title>Generate a Simulation Report for a Print Job</v-card-title>
+                <v-card-title>View a Simulation Report for a Print Job</v-card-title>
                 <v-form ref="simulationReportForm" fast-fail @submit.prevent="getSimulationReport">
                     <v-row>
                         <v-col cols="5">
@@ -38,7 +38,7 @@
                                 v-model="workflowTitle" />
                         </v-col>
                         <v-col cols="2" class="d-flex justify-center align-center">
-                            <v-btn type="submit" class="mb-2" color="primary">Generate Report</v-btn>
+                            <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">View Report</v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -103,7 +103,7 @@ const getSimulationReport = async () => {
                 return key.toLowerCase().includes("id") ? undefined : value;
             });
             const report = JSON.stringify(cleanData["SimulationReport"], null, 2);
-            message.value = "Simulation Report for '" + job + "' generated.";
+            message.value = "Getting Simulation Report for '" + job + "'";
             simulationReports.value.push({ title: `${job} with ${workflow}`, details: report });
         })
         .catch(error => {
