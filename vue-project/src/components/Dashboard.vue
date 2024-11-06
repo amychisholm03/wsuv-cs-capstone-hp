@@ -27,27 +27,23 @@
     <v-main>
       <v-container class="pa-3 ma-3">
         <v-row>
-          <v-card class="ma-3 dashboard-component">
-            <v-toolbar class="pa-2">Component 1</v-toolbar>
+            <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+              <v-img src="/src/assets/image1.png"></v-img>
+            </v-card>
 
-          </v-card>
-
-          <v-card class="ma-3 dashboard-component">
-            <v-toolbar class="pa-2">Component 2</v-toolbar>
-
-          </v-card>
+            <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+              <v-img src="/src/assets/image2.png"></v-img>
+            </v-card>
         </v-row>
 
         <v-row>
-          <v-card class="ma-3 dashboard-component">
-            <v-toolbar class="pa-2">Component 3</v-toolbar>
+            <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+              <v-img src="/src/assets/image4.png"></v-img>
+            </v-card>
 
-          </v-card>
-
-          <v-card class="ma-3 dashboard-component">
-            <v-toolbar class="pa-2">Component 4</v-toolbar>
-
-          </v-card>
+            <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;" >
+              <v-img src="/src/assets/image3.png"></v-img>
+            </v-card>
         </v-row>
 
 
@@ -92,22 +88,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from 'vue-router';
-const router = useRouter();
+  import { ref, onMounted } from "vue";
+  import { useRouter } from 'vue-router';
 
-const message = ref('');
-const drawer = ref(false);
-const jobTitle = ref('');
-const pageCount = ref('');
-const rasterizationProfile = ref('');
-const selectedWorkflow = ref(null);
-const workflows = ref([
-  { id: 1, name: 'Default Workflow' }
-]);
-
-
-drawer.value = false;
+  const drawer = ref(false);
+  const router = useRouter();
 
 //// ROUTING ////
 const routeTo = (where) => {
