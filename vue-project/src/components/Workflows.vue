@@ -61,20 +61,12 @@
 <script setup>
     import { ref, onMounted } from "vue";
     import { useRouter } from 'vue-router';
-    import { ref, onMounted } from "vue";
-    import { useRouter } from 'vue-router';
 
     const router = useRouter();
     const routeTo = (where) => {
         router.push(where);
     };
-    const router = useRouter();
-    const routeTo = (where) => {
-        router.push(where);
-    };
 
-    const message = ref('');
-    const drawer = ref(false);
     const message = ref('');
     const drawer = ref(false);
 
@@ -82,10 +74,7 @@
     const selectedSteps = ref(null);
     const workflowSteps = ref([]);
 
-    //// METHODS ////
-    const workflowTitleValidation = [
-        x => { if (x) return true; return 'Workflow title cannot not be left empty'}
-    ];
+    
     //// METHODS ////
     const workflowTitleValidation = [
         x => { if (x) return true; return 'Workflow title cannot not be left empty'}
