@@ -25,23 +25,23 @@
     <v-main>
       <v-container class="pa-3 ma-3">
         <v-row>
-            <v-card class="ma-3 dashboard-component">
-              <v-toolbar class="pa-2">Component 1</v-toolbar>
-            </v-card>
+          <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+            <v-img src="/src/assets/image1.png"></v-img>
+          </v-card>
 
-            <v-card class="ma-3 dashboard-component" >
-              <v-toolbar class="pa-2">Component 2</v-toolbar>
-            </v-card>
+          <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+            <v-img src="/src/assets/image2.png"></v-img>
+          </v-card>
         </v-row>
 
         <v-row>
-            <v-card class="ma-3 dashboard-component">
-              <v-toolbar class="pa-2">Component 3</v-toolbar>
-            </v-card>
+          <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+            <v-img src="/src/assets/image4.png"></v-img>
+          </v-card>
 
-            <v-card class="ma-3 dashboard-component" >
-              <v-toolbar class="pa-2">Component 4</v-toolbar>
-            </v-card>
+          <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
+            <v-img src="/src/assets/image3.png"></v-img>
+          </v-card>
         </v-row>
       </v-container>
     </v-main>
