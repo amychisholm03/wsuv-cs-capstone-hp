@@ -121,7 +121,12 @@
                 mode: 'cors',
                 }
             );
-            workflowSteps.value = await response.json();
+            if (response.ok){ 
+                workflowSteps.value = await response.json();
+            } else {
+                console.log("Error fetching data")
+                console.log("Response from server: " + response)
+            }
         } catch (error) {
             console.log('Error fetching list of workflow steps');     
         }
