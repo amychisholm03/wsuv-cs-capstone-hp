@@ -49,75 +49,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from 'vue-router';
-const router = useRouter();
+  import { ref, onMounted } from "vue";
+  import { useRouter } from 'vue-router';
 
-const message = ref('');
-const drawer = ref(false);
-const jobTitle = ref('');
-const pageCount = ref('');
-const rasterizationProfile = ref('');
-const selectedWorkflow = ref(null);
-const workflows = ref([
-  { id: 1, name: 'Default Workflow' }
-]);
+  const drawer = ref(false);
+  const router = useRouter();
 
-
-drawer.value = false;
-
-//// ROUTING ////
-const routeTo = (where) => {
-  router.push(where);
-};
-
-
-//// API CALLS ////
-
-const createJob = async () => {
-  if (jobTitle.value.trim() !== '' && pageCount.value.trim() !== '' && rasterizationProfile.value.trim() !== '') {
-    const url = "http://54.200.253.84:80/createJob";
-    const data = {
-      Title: jobTitle.value.toString(),
-      PageCount: pageCount.value.toString(),
-      RasterizationProfile: rasterizationProfile.value.toString()
-    }
-
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-
-    if (!response.ok) {
-      console.log("Error fetching data")
-      console.log("Response from server: " + response)
-    } else {
-      message.value = jobTitle.value + " has been created"
-      setTimeout(() => {
-        message.value = '';
-        jobTitle.value = '';
-        pageCount.value = '';
-        rasterizationProfile.value = '';
-      }, 3000);
-    }
-  } else {
-    message.value = "Job title, page count, and rasterization profile cannot be left blank";
-  }
-}
-
-
-//// OTHER FUNCTIONS ////
-const selectWorkflow = async () => {
-  // once API is made for getting default workflow this will send workflow to backend
-  if (selectedWorkflow.value) {
-    message.value = "Workflow: " + selectedWorkflow.value.name + " has been selected";
-  } else {
-    message.value = "Please select a workflow";
-  }
-}
-
+  //// ROUTING ////
+  const routeTo = (where) => {
+    router.push(where);
+  };
 </script>
 
 <style>

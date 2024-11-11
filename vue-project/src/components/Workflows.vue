@@ -2,7 +2,7 @@
     <v-app theme="light">
         <v-toolbar>
             <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
-            <v-toolbar-title>Define Workflow</v-toolbar-title>
+            <v-toolbar-title>Define Workflows</v-toolbar-title>
         </v-toolbar> 
 
         <!-- Sidebar -->
@@ -14,7 +14,7 @@
                 <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
             </v-row>
             <v-row>
-                <v-btn block tile @click="routeTo('/Workflows')">Define Workflow</v-btn>
+                <v-btn block tile @click="routeTo('/Workflows')">Define Workflows</v-btn>
             </v-row>
             <v-row>
                 <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
@@ -34,6 +34,8 @@
                         :rules="selectedStepsValidation"
                         :items="workflowSteps"
                         label="Select Workflow Steps"
+                        item-title="Title"
+                        item-value="_id"
                         multiple
                     >
                         <template v-slot:selection="{ item, index }">
@@ -70,16 +72,9 @@
 
     const workflowTitle = ref('');
     const selectedSteps = ref(null);
-    const workflowSteps = ref([
-        {title: "preflight"},
-        {title: "metrics"},
-        {title: "rasterization"},
-        {title: "printing"},
-        {title: "cutting"},
-        {title: "laminating"}
-    ]);
+    const workflowSteps = ref([]);
 
-
+    
     //// METHODS ////
     const workflowTitleValidation = [
         x => { if (x) return true; return 'Workflow title cannot not be left empty'}
@@ -114,6 +109,28 @@
     }
 
 //// API CALLS ////
+    onMounted( async () => {
+        getWorkflowSteps()
+    })
+
+    const getWorkflowSteps = async () => {
+        try {
+            const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowStepList";
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                }
+            );
+            if (response.ok){ 
+                workflowSteps.value = await response.json();
+            } else {
+                console.log("Error fetching data")
+                console.log("Response from server: " + response)
+            }
+        } catch (error) {
+            console.log('Error fetching list of workflow steps');     
+        }
+    }
     
     const createWorkflow = async () => {
         if (!validateCreatedWorkflow()){
@@ -124,7 +141,6 @@
             Title: workflowTitle.value.toString(),
             Steps: selectedSteps.value,
         }
-
         const response = await fetch(url, {
             method: 'POST',
             mode: 'cors',
@@ -144,6 +160,35 @@
     }
 </script>
 
+
+<style>
+    .drawer-button{
+    text-align: left;
+    }
+
+    .exit-button{
+    border:none;
+    padding:0;
+    box-shadow: none;
+    background: transparent;
+    }
+
+
+    .dashboard-component{
+    border:1px;
+    width: 400px;
+    height: 400px;
+    }
+
+    .dashboard-container{
+    max-width: 400px;
+    }
+
+    .v-btn{
+        margin: 0 5px;
+    }
+
+</style>
 
 <style>
     .drawer-button{
