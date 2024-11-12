@@ -24,22 +24,6 @@
                 <v-list-item-title>Simulation Reports</v-list-item-title>
             </v-list-item>
         </v-list>
-
-      <!-- <v-row class="pa-4">
-        <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
-      </v-row>
-      <v-row>
-        <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/Workflows')">Define Workflow</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-        <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
-      </v-row> -->
     </v-navigation-drawer>
 </v-app>
 </template>
@@ -61,7 +45,7 @@
   .drawer-button {
     text-align: left;
   }
- 
+
   .open-and-close-button{
     margin-top:10px;
     padding-top:10px;
