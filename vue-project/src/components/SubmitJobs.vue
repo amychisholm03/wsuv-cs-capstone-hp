@@ -1,28 +1,8 @@
 <template>
     <v-app theme="light">
-        <v-toolbar>
-            <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
-            <v-toolbar-title>Submit Print Jobs</v-toolbar-title>
+        <v-toolbar class="toolbar">
+            <v-toolbar-title class="header">Submit Print Jobs</v-toolbar-title>
         </v-toolbar> 
-
-        <!-- Sidebar -->
-        <v-navigation-drawer temporary v-model="drawer" theme="light">
-            <v-row class="pa-4">
-                <v-btn block tile color="blue" @click="routeTo('/')">Dashboard</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/Workflows')">Define Workflows</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
-            </v-row>
-        </v-navigation-drawer>
         <v-main>
             <v-card class="ma-3 pa-3" style="width:85vw; height:350px; border-width:2px;">
                 <v-card-title>Submit Print Job for Simulation</v-card-title> 
@@ -61,7 +41,6 @@
     };
 
     const message1 = ref('');
-    const drawer = ref(false);
 
     const selectedWorkflow = ref(null);
     const previousWorkflows = ref([]);
@@ -138,10 +117,6 @@
 
 
 <style>
-    .drawer-button{
-    text-align: left;
-    }
-
     .exit-button{
     border:none;
     padding:0;

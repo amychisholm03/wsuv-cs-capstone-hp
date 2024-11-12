@@ -1,28 +1,9 @@
 <template>
   <v-app theme="light">
-    <v-toolbar>
-        <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer=!drawer"></v-btn>
-        <v-toolbar-title>Dashboard</v-toolbar-title>
+    <v-toolbar class="toolbar">
+        <v-toolbar-title class="header">Dashboard</v-toolbar-title>
     </v-toolbar> 
-    
-    <v-navigation-drawer temporary v-model="drawer" theme="light">
-      <v-row class="pa-4">
-        <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
-      </v-row>
-      <v-row>
-        <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/Workflows')">Define Workflow</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-        <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
-      </v-row>
-    </v-navigation-drawer>
-    <v-main>
+      <v-main>
       <v-container class="pa-3 ma-3">
         <v-row>
           <v-card class="ma-3 dashboard-component" style="width: 425px; height: 305px;">
@@ -52,7 +33,6 @@
   import { ref, onMounted } from "vue";
   import { useRouter } from 'vue-router';
 
-  const drawer = ref(false);
   const router = useRouter();
 
   //// ROUTING ////
@@ -61,11 +41,7 @@
   };
 </script>
 
-<style>
-  .drawer-button {
-    text-align: left;
-  }
-
+<style scoped>
   .exit-button {
     border: none;
     padding: 0;
@@ -73,9 +49,7 @@
     background: transparent;
   }
 
-
   .dashboard-component {
-    border: 1px;
     width: 400px;
     height: 400px;
   }

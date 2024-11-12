@@ -1,28 +1,8 @@
 <template>
   <v-app theme="light">
-    <v-toolbar>
-      <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer = !drawer"></v-btn>
-      <v-toolbar-title>Create Print Jobs</v-toolbar-title>
-    </v-toolbar>
-
-    <!-- Sidebar -->
-    <v-navigation-drawer temporary v-model="drawer" theme="light">
-      <v-row class="pa-4">
-          <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/Workflows')">Define Workflow</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
-      </v-row>
-      <v-row>
-          <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
-      </v-row>
-    </v-navigation-drawer>
+    <v-toolbar class="toolbar">
+        <v-toolbar-title class="header">Create Print Job</v-toolbar-title>
+    </v-toolbar> 
     <v-main>
       <v-card class="ma-3 pa-3" style="width:85vw; height:400px; border-width:2px;">
         <v-card-title>Create New Print Job</v-card-title>
@@ -61,7 +41,6 @@ const routeTo = (where) => {
 };
 
 const message = ref('');
-const drawer = ref(false);
 
 const printSettings = ref(
   {
@@ -161,9 +140,6 @@ const validateCreatePrintSettings = () => {
 </script>
 
 <style>
-.drawer-button {
-  text-align: left;
-}
 
 .exit-button {
   border: none;
