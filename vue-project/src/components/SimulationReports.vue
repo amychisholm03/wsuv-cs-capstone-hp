@@ -1,36 +1,21 @@
 <template>
     <v-app theme="light">
+        <v-dialog scrollable persistent class="create-report" max-width="700px" style="max-height:600px; margin:0px;" v-model="newSimulationReportDialogue">
+            <create-simulation-report @exit="newSimulationReportDialogue=false"></create-simulation-report>
+        </v-dialog>
         <v-toolbar class="toolbar">
             <v-toolbar-title class="header">Simulation Reports</v-toolbar-title>
         </v-toolbar> 
-        <v-main>
-            <v-card class="ma-3 pa-3" style="border-width:2px;">
-                <v-card-title>View a Simulation Report for a Print Job</v-card-title>
-                <v-form ref="simulationReportForm" fast-fail @submit.prevent="getSimulationReport">
-                    <v-row>
-                        <v-col cols="5">
-                            <v-text-field :rules="titleValidation" label="Print Job Title/Name"
-                                v-model="printJobTitle" />
-                        </v-col>
-                        <v-col cols="5">
-                            <v-text-field :rules="titleValidation" label="Workflow Title/Name"
-                                v-model="workflowTitle" />
-                        </v-col>
-                        <v-col cols="2" class="d-flex justify-center align-center">
-                            <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">View Report</v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-                <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
-            </v-card>
-            <v-card class="ma-3 pa-3" style="border-width:2px;">
-                <v-card-title>Previous Simulation Reports</v-card-title>
+        <v-main class="ma-3 pa-3">
+            <v-btn color="success mb-2" @click="newSimulationReportDialogue=true">New Simulation Report</v-btn>
+            <v-card style="border-width:2px;">
+                <v-card-title>Report History</v-card-title>
                 <v-list>
                     <v-list-item v-for="(report, index) in simulationReports" :key="index">
-                        <v-list-item-content>
+                        <!-- <v-list-item-content>
                             <v-list-item-title>{{ report.title }}</v-list-item-title>
                             <v-list-item-subtitle>{{ report.details }}</v-list-item-subtitle>
-                        </v-list-item-content>
+                        </v-list-item-content> -->
                     </v-list-item>
                 </v-list>
             </v-card>
@@ -41,6 +26,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import CreateSimulationReport from './SimulationReport/createSimulationReport.vue';
 
 // Router
 const router = useRouter();
@@ -53,6 +39,8 @@ const message = ref('');
 const printJobTitle = ref('');
 const workflowTitle = ref('');
 const simulationReports = ref([]);
+const newSimulationReportDialogue = ref(false);
+const viewSimulationReportDialogue = ref(false);
 
 const titleValidation = [
     x => { if (x) return true; return false; }
