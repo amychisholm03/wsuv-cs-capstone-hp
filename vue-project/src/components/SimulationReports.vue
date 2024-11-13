@@ -1,29 +1,8 @@
 <template>
     <v-app theme="light">
-        <v-toolbar>
-            <v-btn class="pa-3 ma-3 drawer-button" tile icon="$menu" @click="drawer = !drawer"></v-btn>
-            <v-toolbar-title>Simulation Reports</v-toolbar-title>
-        </v-toolbar>
-
-        <!-- Sidebar -->
-        <v-navigation-drawer temporary v-model="drawer" theme="light">
-            <v-row class="pa-4">
-                <v-btn block tile color="light-blue-lighten-1" @click="routeTo('/')">Dashboard</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/PrintJobs')">Define Print Jobs</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/Workflows')">Define Workflows</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/SubmitJobs')">Submit Print Jobs</v-btn>
-            </v-row>
-            <v-row>
-                <v-btn block tile @click="routeTo('/SimulationReports')">Simulation Reports</v-btn>
-            </v-row>
-        </v-navigation-drawer>
-
+        <v-toolbar class="toolbar">
+            <v-toolbar-title class="header">Simulation Reports</v-toolbar-title>
+        </v-toolbar> 
         <v-main>
             <v-card class="ma-3 pa-3" style="border-width:2px;">
                 <v-card-title>View a Simulation Report for a Print Job</v-card-title>
@@ -71,7 +50,6 @@ const routeTo = (where) => {
 
 // Component refs
 const message = ref('');
-const drawer = ref(false);
 const printJobTitle = ref('');
 const workflowTitle = ref('');
 const simulationReports = ref([]);
@@ -117,7 +95,4 @@ const getSimulationReport = async () => {
 </script>
 
 <style>
-.drawer-button {
-    text-align: left;
-}
 </style>
