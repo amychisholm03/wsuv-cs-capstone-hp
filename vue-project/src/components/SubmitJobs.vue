@@ -115,7 +115,6 @@
     }
 </script>
 
-
 <style>
     .exit-button{
     border:none;
@@ -138,5 +137,4 @@
     .v-btn{
         margin: 0 5px;
     }
-
 </style>

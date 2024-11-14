@@ -12,16 +12,13 @@
                 <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item>
             <v-list-item class="menu-item" prepend-icon="mdi-printer-pos-plus" @click="routeTo('/PrintJobs')">
-                <v-list-item-title>Create Print Jobs</v-list-item-title>
-            </v-list-item>
-            <v-list-item class="menu-item" prepend-icon="mdi-printer-pos-play" @click="routeTo('/SubmitJobs')">
-                <v-list-item-title>Submit Print Jobs</v-list-item-title>
+                <v-list-item-title>Print Jobs</v-list-item-title>
             </v-list-item>
             <v-list-item class="menu-item" prepend-icon="mdi-sitemap" @click="routeTo('/Workflows')">
                 <v-list-item-title>Workflows</v-list-item-title>
             </v-list-item>
             <v-list-item class="menu-item" prepend-icon="mdi-test-tube" @click="routeTo('/SimulationReports')">
-                <v-list-item-title>Simulation Reports</v-list-item-title>
+                <v-list-item-title>Simulation</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
