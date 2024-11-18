@@ -28,11 +28,11 @@
               </v-row>
               <v-row class="">
                 <v-col class="ma-0 pa-0">
-                  <v-text-field outlined label="From" type="datetime-local">
+                  <v-text-field outlined v-model="fromDate" label="From" type="datetime-local">
                   </v-text-field>
                 </v-col>
                 <v-col class="ma-0 ml-2 pa-0">
-                  <v-text-field outlined label="To" type="datetime-local">
+                  <v-text-field outlined v-model="toDate" label="To" type="datetime-local">
                   </v-text-field>
                 </v-col>
               </v-row>
@@ -62,10 +62,10 @@
             <v-row>
               <v-col>
                 <v-chip class="ml-2 mt-2" color="primary">
-                  Nov 14
+                    {{ report.Date }}
                 </v-chip>
-                <v-chip class="mt-2" color="secondary">
-                  11:59PM
+                <v-chip class="ml-2 mt-2" color="secondary">
+                    {{ report.Time }}
                 </v-chip>
               </v-col>
             </v-row>
@@ -118,6 +118,9 @@
   const selectedPrintJobs = ref([]);
   const selectedWorkflows = ref([]);
 
+  const fromDate = ref(null);
+  const toDate = ref(null);
+
   const selectReport = (report) => {
     emit('selectreport', report);
   };
@@ -132,7 +135,6 @@
   const filter = () => {
 
     nextTick(() => {
-
       const printJobLookup = {};
       const workflowLookup = {};
 
