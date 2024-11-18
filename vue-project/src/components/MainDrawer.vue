@@ -42,11 +42,6 @@
   .drawer-button {
     text-align: left;
   }
- 
-  .open-and-close-button{
-    margin-top:10px;
-    padding-top:10px;
-  }
 
   .exit-button {
     border: none;
