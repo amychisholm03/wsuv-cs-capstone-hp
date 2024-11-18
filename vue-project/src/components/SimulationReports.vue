@@ -1,98 +1,184 @@
 <template>
-    <v-app theme="light">
-        <v-toolbar class="toolbar">
-            <v-toolbar-title class="header">Simulation Reports</v-toolbar-title>
-        </v-toolbar> 
-        <v-main>
-            <v-card class="ma-3 pa-3" style="border-width:2px;">
-                <v-card-title>View a Simulation Report for a Print Job</v-card-title>
-                <v-form ref="simulationReportForm" fast-fail @submit.prevent="getSimulationReport">
-                    <v-row>
-                        <v-col cols="5">
-                            <v-text-field :rules="titleValidation" label="Print Job Title/Name"
-                                v-model="printJobTitle" />
-                        </v-col>
-                        <v-col cols="5">
-                            <v-text-field :rules="titleValidation" label="Workflow Title/Name"
-                                v-model="workflowTitle" />
-                        </v-col>
-                        <v-col cols="2" class="d-flex justify-center align-center">
-                            <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">View Report</v-btn>
-                        </v-col>
-                    </v-row>
-                </v-form>
-                <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
-            </v-card>
-            <v-card class="ma-3 pa-3" style="border-width:2px;">
-                <v-card-title>Previous Simulation Reports</v-card-title>
-                <v-list>
-                    <v-list-item v-for="(report, index) in simulationReports" :key="index">
-                        <v-list-item-content>
-                            <v-list-item-title>{{ report.title }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ report.details }}</v-list-item-subtitle>
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list>
-            </v-card>
-        </v-main>
-    </v-app>
+	<v-app theme="light">
+		<v-dialog scrollable persistent class="create-report" max-width="700px" style="max-height:600px; margin:0px;"
+			v-model="newSimulationReportDialogue">
+			<create-simulation-report @exit="newSimulationReportDialogue = false"></create-simulation-report>
+		</v-dialog>
+		<v-toolbar class="toolbar">
+			<v-toolbar-title class="header">Simulation</v-toolbar-title>
+		</v-toolbar>
+		<v-main class="pa-3">
+			<v-card
+        class="large-module pa-3 mb-3"
+      >
+        <simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
+      </v-card>
+			<v-card
+        class="module pa-3 mb-3"
+      >
+		      <simulation-report-generate style="height:300px; width:800px;"  @create="getSimulationReports" :printJobs="printJobs" :workflows="workflows"></simulation-report-generate>
+      </v-card>
+		</v-main>
+	</v-app>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from "vue";
+import CreateSimulationReport from './SimulationReport/createSimulationReport.vue';
+import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
+import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
 
-// Router
-const router = useRouter();
-const routeTo = (where) => {
-    router.push(where);
-};
-
-// Component refs
-const message = ref('');
-const printJobTitle = ref('');
-const workflowTitle = ref('');
+const workflows = ref([]);
+const printJobs = ref([]);
 const simulationReports = ref([]);
+const newSimulationReportDialogue = ref(false);
 
-const titleValidation = [
-    x => { if (x) return true; return false; }
-];
+//////////////////////
+//// User Actions
+//////////////////////
 
-const getSimulationReport = async () => {
-    if (!titleValidation[0](printJobTitle.value)) {
-        message.value = 'Print job cannot be left empty';
-        return;
-    }
-    if (!titleValidation[0](workflowTitle.value)) {
-        message.value = 'Workflow cannot be left empty';
-        return;
-    }
-
-    //TODO: make title and workflow not hardcoded
-    const job = "PrintJob 1"; //printJobTitle.value.toString(); 
-    const workflow = "Workflow 1";
-    const apiUrl = `http://api.wsuv-hp-capstone.com/getSimulationReport?title=${encodeURIComponent(job)}&workflow=${encodeURIComponent(workflow)}`;
-
-    await fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Remove fields with "id" in them
-            const cleanData = JSON.parse(JSON.stringify(data), (key, value) => {
-                return key.toLowerCase().includes("id") ? undefined : value;
-            });
-            const report = JSON.stringify(cleanData["SimulationReport"], null, 2);
-            message.value = "Getting Simulation Report for '" + job + "'";
-            simulationReports.value.push({ title: `${job} with ${workflow}`, details: report });
-        })
-        .catch(error => {
-            message.value = 'Failed to generate report: ' + error;
-        }).finally(() => {
-            setTimeout(() => {
-                message.value = '';
-            }, 3000);
-        });
+/**
+* TODO: IMPLEMENT THIS
+* activated when you select a simulation report
+*/
+const selectSimulationReport = (id) => {
+	alert("Viewing: " + id);
 }
+
+///////////////////
+//// API CALLS ////
+///////////////////
+
+/**
+* Get all print jobs
+*/
+const getPrintJobs = async () => {
+	try {
+		const url = "http://api.wsuv-hp-capstone.com/query?CollectionName=PrintJob&Query={}";
+		const response = await fetch(url, {
+			method: 'GET',
+			mode: 'cors',
+		});
+		if (response.ok) {
+			printJobs.value = await response.json();
+		} else {
+			console.log("Error fetching data");
+			console.log("Response from server: " + response);
+		}
+	} catch (error) {
+		console.log('Error fetching list of print jobs');
+		console.log(error);
+	}
+}
+
+/**
+* Get all workflows.
+* @returns Array of workflow objects.
+*/
+const getWorkflows = async () => {
+	try {
+		const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowList";
+		const response = await fetch(url, {
+			method: 'GET',
+			mode: 'cors',
+		});
+		if (response.ok) {
+			workflows.value = await response.json();
+		} else {
+			console.log("Error fetching data")
+			console.log("Response from server: " + response)
+		}
+	} catch (error) {
+		console.log('Error fetching list of workflows');
+	}
+}
+
+/**
+* Get a list of simulation reports
+*/
+const getSimulationReports = async () => {
+	try {
+		const url = "http://api.wsuv-hp-capstone.com:80/getSimulationReportList";
+		const response = await fetch(url, {
+			method: 'GET',
+			mode: 'cors',
+		});
+		if (response.ok) {
+			simulationReports.value = await response.json();
+      simulationReports.value.forEach( (report) => {
+        const dateObj = new Date(report.CreationTime * 1000);
+        report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate();
+        report.Time = dateObj.getHours() + ":" + dateObj.getMinutes();
+      });
+    } else {
+			console.log("Error fetching data");
+			console.log("Response from server: " + String(response.status));
+		}
+	} catch (error) {
+		console.log('Error fetching list of simulation reports.');
+	}
+}
+
+onMounted(async () => {
+	getWorkflows();
+	getPrintJobs();
+	await getSimulationReports();
+});
 </script>
 
 <style>
+.exit-button {
+	border: none;
+	padding: 0;
+	box-shadow: none;
+	background: transparent;
+}
+
+.dashboard-component {
+	border: 1px;
+	width: 400px;
+	height: 400px;
+}
+
+.dashboard-container {
+	max-width: 400px;
+}
+
+.v-btn {
+	margin: 0 5px;
+}
+
+.module {
+  max-width:800px;
+  border-width:2px;
+  border-color:dark-grey;
+  padding:16px;
+}
+
+.large-module{
+  max-width:1300px;
+  border-width:2px;
+  border-color:dark-grey;
+}
+
+.report-history-list {
+	height: 90vh;
+	width: 100%;
+	overflow-y: scroll;
+}
+
+
+.simulation-report-search-box {
+	max-width: 400px;
+	max-height: 100px;
+}
+
+.item-desc {
+	font-weight: bold;
+	font-size: large;
+}
+
+.item-val {
+	font-size: large;
+}
 </style>

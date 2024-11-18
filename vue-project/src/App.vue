@@ -32,6 +32,12 @@
   font-size: medium;
 }
 
+.module-title{
+  color:black;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight:bolder;
+}
+
 .toolbar{
   background-color: white;
   padding-left:10px;

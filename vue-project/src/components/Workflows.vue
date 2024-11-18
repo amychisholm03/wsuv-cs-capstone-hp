@@ -4,7 +4,7 @@
             <v-toolbar-title class="header">Workflows</v-toolbar-title>
         </v-toolbar> 
         <v-main>
-            <v-card class="ma-3 pa-3" style="width:85vw; height:350px; border-width:2px;">
+            <v-card class="ma-3 pa-3" style="width:700px; height:350px; border-width:2px;">
                 <v-card-title>Create New Workflow</v-card-title>
                 <v-form ref="createWorkflowForm" fast-fail @submit.prevent="createWorkflow">
                     <v-text-field :rules="workflowTitleValidation" label="Workflow Title" v-model="workflowTitle" />
