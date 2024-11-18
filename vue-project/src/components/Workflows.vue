@@ -117,7 +117,7 @@
         const url = "http://api.wsuv-hp-capstone.com:80/createWorkflow";
         const data = {
             Title: workflowTitle.value.toString(),
-            Steps: selectedSteps.value,
+            WorkflowSteps: selectedSteps.value,
         }
         const response = await fetch(url, {
             method: 'POST',

@@ -63,7 +63,7 @@ const getPrintJobs = async () => {
 			printJobs.value = await response.json();
 		} else {
 			console.log("Error fetching data");
-			console.log("Response from server: " + response);
+			console.log("Response from server: " + String(response.status));
 		}
 	} catch (error) {
 		console.log('Error fetching list of print jobs');
@@ -86,7 +86,7 @@ const getWorkflows = async () => {
 			workflows.value = await response.json();
 		} else {
 			console.log("Error fetching data")
-			console.log("Response from server: " + response)
+			console.log("Response from server: " + String(response.status))
 		}
 	} catch (error) {
 		console.log('Error fetching list of workflows');
@@ -105,10 +105,10 @@ const getSimulationReports = async () => {
 		});
 		if (response.ok) {
 			simulationReports.value = await response.json();
-      simulationReports.value.forEach( (report) => {
-        const dateObj = new Date(report.CreationTime * 1000);
-        report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate();
-        report.Time = dateObj.getHours() + ":" + dateObj.getMinutes();
+      		simulationReports.value.forEach( (report) => {
+        	const dateObj = new Date(report.CreationTime * 1000);
+        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate();
+        	report.Time = dateObj.getHours() + ":" + dateObj.getMinutes();
       });
     } else {
 			console.log("Error fetching data");
