@@ -56,7 +56,7 @@
       <v-list style="margin:0; padding:0;">
       <v-list-item v-for="(report, index) in simulationReportsDisplay" style="margin:0; padding:0;"
         :key="index">
-        <v-card class="report-history-item" @click="$emit('select-report', report._id)">
+        <v-card class="report-history-item" @click="$emit('selectreport', report._id)">
           <!--Workflow has defined printjob title-->
           <div v-if="report.PrintJobTitle">
             <v-row>
@@ -109,12 +109,18 @@
       printJobs: Array,
     });
 
+  const emit = defineEmits(['selectreport']);
+
   const simulationReportsDisplay = ref([]);
   const searchValue = ref('');
   const drawer = ref(false);
 
   const selectedPrintJobs = ref([]);
   const selectedWorkflows = ref([]);
+
+  const selectReport = (report) => {
+    emit('selectreport', report);
+  };
 
 
   ///////////////////////////////
@@ -141,9 +147,6 @@
       const filteringJobs = (selectedPrintJobs.value.length > 0);
       const filteringWorkflows = (selectedWorkflows.value.length > 0);
 
-      console.log(selectedPrintJobs.value.length);
-
-
       simulationReportsDisplay.value = simulationReports.filter( (report) => {
         if (filteringWorkflows && workflowLookup[report.WorkflowTitle] === undefined){
           return false;
@@ -151,7 +154,6 @@
         if (filteringJobs && printJobLookup[report.PrintJobTitle] === undefined){
           return false;
         }
-        console.log(report.PrintJobTitle + " is sufficient to pass because the lookup's value is " + printJobLookup[report.PrintJobTitle]);
         return true;
       });
 

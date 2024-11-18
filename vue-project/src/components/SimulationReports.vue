@@ -11,12 +11,12 @@
 			<v-card
         class="large-module pa-3 mb-3"
       >
-        <simulation-report-history style="width:100%;" :printJobs="printJobs" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
+        <simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
       </v-card>
 			<v-card
         class="module pa-3 mb-3"
       >
-		      <simulation-report-generate style="height:300px; width:800px;" @create="getSimulationReports" :printJobs="printJobs" :workflows="workflows"></simulation-report-generate>
+		      <simulation-report-generate style="height:300px; width:800px;"  @create="getSimulationReports" :printJobs="printJobs" :workflows="workflows"></simulation-report-generate>
       </v-card>
 		</v-main>
 	</v-app>
