@@ -6,10 +6,10 @@
         <v-row class="mt-1 pl-6 pr-6">
             <v-col>
                 <v-card>
-                    <v-text-field density="compact" disabled label="Date Created"> </v-text-field>
-                    <v-text-field density="compact" disabled label="Print Job Title">  </v-text-field>
-                    <v-text-field density="compact" disabled label="Page Count">  </v-text-field>
-                    <v-text-field density="compact" disabled label="Rasterization Profile">  </v-text-field>
+                    <v-text-field density="compact" disabled label="Date Created"> {{ Date(report.CreationTime) }} </v-text-field>
+                    <v-text-field density="compact" disabled label="Print Job Title"> {{ printJob.Title }} </v-text-field>
+                    <v-text-field density="compact" disabled label="Page Count"> {{ printJob.PageCount }} </v-text-field>
+                    <v-text-field density="compact" disabled label="Rasterization Profile"> {{ printJob.RasterizationProfile }} </v-text-field>
                 </v-card>
             </v-col>
             <v-col>
@@ -32,7 +32,7 @@ import { onMounted, ref } from "vue";
 
 // Component refs
 const SimulationReportDialogue = ref(false);
-defineProps({
+const props = defineProps({
     report: Object,
     workflow: Object,
     printJob: Object,

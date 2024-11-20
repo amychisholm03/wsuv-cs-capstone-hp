@@ -42,8 +42,11 @@ const selectedWorkflow = ref(null)
 */
 const selectSimulationReport = (id) => {
 	selectedReport.value = simulationReports.value.find(item => item._id === id)
-	selectedPrintJob.value = printJobs.value.find(item => item._id === report.PrintJobID)
-	selectedWorkflow.value = workflows.value.find(item => item._id === report.WorkflowID)
+	selectedPrintJob.value = printJobs.value.find(item => item._id === selectedReport.value.PrintJobID)
+	selectedWorkflow.value = workflows.value.find(item => item._id === selectedReport.value.WorkflowID)
+	console.log(selectedReport.value)
+	console.log(selectedPrintJob.value)
+	console.log(selectedWorkflow.value)
 	SimulationReportDialogue.value = true
 }
 
