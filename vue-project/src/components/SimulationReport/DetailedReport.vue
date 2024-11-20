@@ -79,7 +79,6 @@ onMounted(async () => {
         const step = stepsList.value.find(item => item._id === id)
         steps.value.push(step)
     }
-    console.log(steps.value[0]);
 
 });
 </script>
