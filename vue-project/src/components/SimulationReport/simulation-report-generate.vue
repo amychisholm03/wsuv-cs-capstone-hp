@@ -7,7 +7,7 @@
           :items="printJobs" item-title="Title" item-value="_id" outlined>
         </v-select>
         <v-select v-model="selectedWorkflow" :rules="selectedWorkflowValidation" :items="workflows"
-          label="Select Workflow" item-title="Title" item-value="WorkflowID" outlined>
+          label="Select Workflow" item-title="Title" item-value="_id" outlined>
           <template v-slot:item="{ props }">
             <v-list-item v-bind="props"></v-list-item>
           </template>
@@ -87,8 +87,7 @@
       );
 
       if (!response.ok) {
-        console.log("Error fetching data");
-        console.log("Response from server: " + String(response.status));
+        console.log("Error generating report. Response from server: " + String(response.status));
         failure.value=true;
         setTimeout(() => {
           failure.value=false;

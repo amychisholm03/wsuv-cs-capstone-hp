@@ -29,8 +29,19 @@
                             </span>
                         </template>
                     </v-select>
-                    <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">Create Workflow</v-btn>
-                    <v-alert class="mt-2" style="background-color:white;">{{ message }}</v-alert>
+                    <v-btn type="submit" class="mb" color="primary" :disabled="failure || success">
+                        Create Workflow
+                    </v-btn>
+                    <v-btn size="x-small" icon type="submit" class="mb-2" v-if="success && !failure" color="success">
+                        <v-icon size="medium">
+                        mdi-check
+                        </v-icon>
+                    </v-btn>
+                    <v-btn size="x-small" icon type="submit" class="mb-2" v-if="!success && failure" color="error">
+                        <v-icon size="medium">
+                        mdi-close
+                        </v-icon>
+                    </v-btn>
                 </v-form>
             </v-card>
         </v-main>
@@ -46,7 +57,8 @@
         router.push(where);
     };
 
-    const message = ref('');
+    const success = ref(false);
+    const failure = ref(false);
 
     const workflowTitle = ref('');
     const selectedSteps = ref(null);
@@ -79,11 +91,15 @@
 
         });
 
-        if (errors.length > 0){
+        if (errors.length > 0) {
+            failure.value=true;
+            success.value=false;
+            setTimeout(() => {
+                failure.value=false;
+            }, 2000);
             return false;
         }
         return true; 
-
     }
 
 //// API CALLS ////
@@ -102,8 +118,7 @@
             if (response.ok){ 
                 workflowSteps.value = await response.json();
             } else {
-                console.log("Error fetching data")
-                console.log("Response from server: " + response)
+                console.log("Error fetching data. Response from server: " + String(response.status))
             }
         } catch (error) {
             console.log('Error fetching list of workflow steps');     
@@ -127,13 +142,18 @@
         });
 
         if (!response.ok) {
-            console.log("Error fetching data")
-            console.log("Response from server: " + response)
-        } else {
-            message.value = workflowTitle.value + " has been created"
+            console.log("Error posting data. Response from server: " + String(response.status))
+            failure.value=true;
             setTimeout(() => {
-                message.value = '';
-            }, 3000);
+                failure.value=false;
+            }, 2000);
+            return;
+        } else {
+            failure.value=false;
+            success.value=true;
+            setTimeout(() => {
+                success.value=false;
+            }, 2000);
         }
     }
 </script>
