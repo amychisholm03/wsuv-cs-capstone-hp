@@ -1,37 +1,36 @@
 <template>
 	<v-app theme="light">
-		<v-dialog scrollable persistent class="create-report" max-width="700px" style="max-height:600px; margin:0px;"
-			v-model="newSimulationReportDialogue">
-			<create-simulation-report @exit="newSimulationReportDialogue = false"></create-simulation-report>
+		<v-dialog scrollable persistent class="detailed-report" max-width="500px" v-model="SimulationReportDialogue">
+			<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printjob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
 		</v-dialog>
 		<v-toolbar class="toolbar">
 			<v-toolbar-title class="header">Simulation</v-toolbar-title>
 		</v-toolbar>
 		<v-main class="pa-3">
-			<v-card
-        class="large-module pa-3 mb-3"
-      >
-        <simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
-      </v-card>
-			<v-card
-        class="module pa-3 mb-3"
-      >
+			<v-card class="large-module pa-3 mb-3">
+        		<simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
+      		</v-card>
+			<v-card class="module pa-3 mb-3">
 		      <simulation-report-generate style="height:300px; width:800px;"  @create="getSimulationReports" :printJobs="printJobs" :workflows="workflows"></simulation-report-generate>
-      </v-card>
+      		</v-card>
 		</v-main>
 	</v-app>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import CreateSimulationReport from './SimulationReport/createSimulationReport.vue';
+import DetailedReport from './SimulationReport/DetailedReport.vue';
 import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
 import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
 
 const workflows = ref([]);
 const printJobs = ref([]);
 const simulationReports = ref([]);
-const newSimulationReportDialogue = ref(false);
+const SimulationReportDialogue = ref(false);
+
+const selectedReport = ref(null)
+const selectedPrintJob = ref(null)
+const selectedWorkflow = ref(null)
 
 //////////////////////
 //// User Actions
@@ -42,7 +41,10 @@ const newSimulationReportDialogue = ref(false);
 * activated when you select a simulation report
 */
 const selectSimulationReport = (id) => {
-	alert("Viewing: " + id);
+	selectedReport.value = simulationReports.value.find(item => item._id === id)
+	selectedPrintJob.value = printJobs.value.find(item => item._id === report.PrintJobID)
+	selectedWorkflow.value = workflows.value.find(item => item._id === report.WorkflowID)
+	SimulationReportDialogue.value = true
 }
 
 ///////////////////
@@ -62,8 +64,7 @@ const getPrintJobs = async () => {
 		if (response.ok) {
 			printJobs.value = await response.json();
 		} else {
-			console.log("Error fetching data");
-			console.log("Response from server: " + String(response.status));
+			console.log("Error fetching data. Response from server: " + String(response.status));
 		}
 	} catch (error) {
 		console.log('Error fetching list of print jobs');
@@ -85,8 +86,7 @@ const getWorkflows = async () => {
 		if (response.ok) {
 			workflows.value = await response.json();
 		} else {
-			console.log("Error fetching data")
-			console.log("Response from server: " + String(response.status))
+			console.log("Error fetching data. Response from server: " + String(response.status))
 		}
 	} catch (error) {
 		console.log('Error fetching list of workflows');
@@ -106,13 +106,12 @@ const getSimulationReports = async () => {
 		if (response.ok) {
 			simulationReports.value = await response.json();
       		simulationReports.value.forEach( (report) => {
-        	const dateObj = new Date(report.CreationTime * 1000);
+        	const dateObj = new Date(report.CreationTime);
         	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate();
         	report.Time = dateObj.getHours() + ":" + dateObj.getMinutes();
       });
     } else {
-			console.log("Error fetching data");
-			console.log("Response from server: " + String(response.status));
+			console.log("Error fetching data. Response from server: " + String(response.status));
 		}
 	} catch (error) {
 		console.log('Error fetching list of simulation reports.');
