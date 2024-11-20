@@ -1,7 +1,7 @@
 <template>
 	<v-app theme="light">
 		<v-dialog scrollable persistent class="detailed-report" max-width="500px" v-model="SimulationReportDialogue">
-			<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printjob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
+			<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printJob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
 		</v-dialog>
 		<v-toolbar class="toolbar">
 			<v-toolbar-title class="header">Simulation</v-toolbar-title>
