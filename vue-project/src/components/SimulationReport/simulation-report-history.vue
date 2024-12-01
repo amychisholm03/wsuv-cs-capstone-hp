@@ -62,17 +62,7 @@
         <v-card class="report-history-item" @click="$emit('selectreport', report._id)">
           <!--Workflow has defined printjob title-->
           <div v-if="report.PrintJobTitle">
-            <v-row>
-              <v-col>
-                <v-chip class="ml-2 mt-2" color="primary">
-                    {{ report.Date }}
-                </v-chip>
-                <v-chip class="ml-2 mt-2" color="secondary">
-                    {{ report.Time }}
-                </v-chip>
-              </v-col>
-            </v-row>
-            <v-row class="pa-0 ml-0">
+            <v-row class="pa-0 ml-0 mt-3">
               <v-col cols="3" class="pa-0 ma-0">
                 <v-card-text class="ml-5 mb-1 pa-0 item-desc">Print Job:</v-card-text>
                 <v-card-text class="ml-5 pa-0 item-desc">Workflow:</v-card-text>
@@ -93,6 +83,16 @@
                   secs.</v-card-text>
                 <v-card-text
                   class="ml-0 ma-0 pa-0 item-val">{{ report.RasterizationTimeTaken }} secs.
+                </v-card-text>
+              </v-col>
+            </v-row>
+            <v-row class="pa-0 ml-0 mb-0 mt-3">
+              <v-col cols="3" class="pa-0 ma-0">
+                <v-card-text class="ml-5 mb-1 pa-0 item-desc">Created:</v-card-text>
+              </v-col>
+              <v-col cols="3" class="pa-0 ma-0">
+                <v-card-text class="ml-0 ma-0 pa-0 item-val">
+                    {{ report.Date }} @ {{ report.Time }}
                 </v-card-text>
               </v-col>
             </v-row>
@@ -193,11 +193,12 @@
 
 <style>
 .report-history-item {
-  height:150px;
+  height:125px;
   border-width:1px;
   border-left-width:0px;
   border-right-width:0px;
-  border-top-width:0px;
+  border-top-width:1px;
+  margin-bottom:0px;
 }
 
 .report-history-table {

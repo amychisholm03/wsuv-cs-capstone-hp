@@ -107,8 +107,17 @@ const getSimulationReports = async () => {
 			simulationReports.value = await response.json();
       		simulationReports.value.forEach( (report) => {
         	const dateObj = new Date(report.CreationTime);
-        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate();
-        	report.Time = dateObj.getHours() + ":" + dateObj.getMinutes();
+        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
+			let hours = dateObj.getHours().toString();
+			let minutes = dateObj.getMinutes().toString();
+			if (hours.length == 1){
+				hours = '0' + hours;
+			}
+			if (minutes.length == 1){
+				minutes = '0' + minutes;
+			}
+
+        	report.Time = hours + ":" + minutes;
       });
     } else {
 			console.log("Error fetching data. Response from server: " + String(response.status));
