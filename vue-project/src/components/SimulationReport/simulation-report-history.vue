@@ -2,7 +2,7 @@
   <v-app>
     <v-row class="mb-2 ml-1">
       <v-col class="d-flex align-center justify-start" style="font-size:x-large;">
-        <span class="module-title" style="font-size:larger;">Simulation Report History</span>
+        <span class="module-title">Simulation Report History</span>
       </v-col>
       <v-col class="d-flex justify-end">
         <v-menu location="start" :close-on-content-click="false" transition="slide-x-reverse-transition" v-model="drawer">
@@ -17,32 +17,35 @@
               <v-icon>mdi-filter</v-icon>
             </v-btn>
           </template>
-          <v-card width="600px" height="300px" class="pa-5">
+          <v-card width="300px" class="pa-5">
             <v-col>
               <v-row>
                 <v-text-field
                   v-model="searchValue"
                   @update:modelValue="filter"
+                  single-line
+                  density="compac"
                   label="Search Reports"
+                  append-icon="mdi-magnify"
                 />
               </v-row>
-              <v-row class="">
+              <v-divider></v-divider>
+              <v-row class="mt-1 mb-2">
                 <v-col class="ma-0 pa-0">
-                  <v-text-field outlined v-model="fromDate" label="From" type="datetime-local">
+                  <v-text-field flat solo-filled hide-details outlined density="compac" single-line v-model="fromDate" label="From" type="datetime-local">
                   </v-text-field>
                 </v-col>
                 <v-col class="ma-0 ml-2 pa-0">
-                  <v-text-field outlined v-model="toDate" label="To" type="datetime-local">
+                  <v-text-field flat hide-details style="font-size:xx-small" outlined density="compac" single-line v-model="toDate" label="To" type="datetime-local">
                   </v-text-field>
                 </v-col>
               </v-row>
-              <v-row class="">
+              <v-divider></v-divider>
+              <v-row class="mt-3 mb-1">
                 <v-col class="ma-0 pa-0">
-                  <v-autocomplete @update:modelValue="filter" multiple v-model="selectedPrintJobs" :items="printJobs" item-title="Title" item-value="Title" label="Filter by Print Job">
+                  <v-autocomplete density="compac" variant="solo-filled" single-line style="overflow-y:auto" @update:modelValue="filter" multiple v-model="selectedPrintJobs" :items="printJobs" item-title="Title" item-value="Title" label="Print Job">
                   </v-autocomplete>
-                </v-col>
-                <v-col class="ma-0 ml-2 pa-0">
-                  <v-autocomplete @update:modelValue="filter" multiple v-model="selectedWorkflows" :items="workflows" item-title="Title" item-value="Title" label="Filter by Workflow">
+                  <v-autocomplete density="compac" variant="solo-filled" single-line @update:modelValue="filter" multiple v-model="selectedWorkflows" :items="workflows" item-title="Title" item-value="Title" label="Workflow">
                   </v-autocomplete>
                 </v-col>
               </v-row>
@@ -125,7 +128,6 @@
     emit('selectreport', report);
   };
 
-
   ///////////////////////////////
   ///// Filters and Searching
   ///////////////////////////////
@@ -207,7 +209,5 @@
 	opacity: 0.5;
 	cursor: pointer;
 }
-
-
 </style>
 

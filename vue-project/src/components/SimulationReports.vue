@@ -3,11 +3,8 @@
 		<v-dialog scrollable persistent class="detailed-report" max-width="500px" v-model="SimulationReportDialogue">
 			<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printJob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
 		</v-dialog>
-		<v-toolbar class="toolbar">
-			<v-toolbar-title class="header">Simulation</v-toolbar-title>
-		</v-toolbar>
 		<v-main class="pa-3">
-			<v-card class="large-module pa-3 mb-3">
+			<v-card style="width:700px" class="large-module pa-3 mb-3">
         		<simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
       		</v-card>
 			<v-card class="module pa-3 mb-3">
@@ -177,10 +174,10 @@ onMounted(async () => {
 
 .item-desc {
 	font-weight: bold;
-	font-size: large;
+	font-size: x-small;
 }
 
 .item-val {
-	font-size: large;
+	font-size: x-small;
 }
 </style>

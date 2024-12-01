@@ -36,6 +36,7 @@
   color:black;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight:bolder;
+  font-size:small;
 }
 
 .toolbar{
