@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <span class="module-title" style="font-size:x-large; margin-left:10px; margin-bottom:24px;">New Simulation Report</span>
+    <span class="module-title" style="margin-left:10px; margin-bottom:24px;">New Simulation Report</span>
       <v-form class="pa-2 mr-7" fast-fail ref="selectPreviousWorkflowForm"
         @submit.prevent="generateSimulationReport">
         <v-select v-model="selectedPrintJob" :rules="printJobTitleValidation" label="Select Print Job"
