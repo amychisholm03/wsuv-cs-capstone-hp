@@ -4,7 +4,7 @@
             <v-row style="padding-bottom:40px;">
                 <v-col>Detailed Simulation Report</v-col>
                 <v-col cols="2" align="right">
-                    <v-btn class="close-button" @click="$emit('exit')">X</v-btn>
+                    <v-btn class="close-button" @click="$emit('exit')" style="font-size: 15px; padding: 1px 2px; min-width: 30px; ">X</v-btn>
                 </v-col>
             </v-row>
         </v-banner>
@@ -59,9 +59,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.close-button {
-    font-size: 15px;
-    padding: 1px 2px;
-    min-width: 30px; 
-};
+.close-button:hover {
+    color: red;
+}
 </style>
