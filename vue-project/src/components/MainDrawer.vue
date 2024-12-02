@@ -2,8 +2,11 @@
   <v-app theme="light">
     <v-navigation-drawer style="min-width:300px;" :rail="disabled" :model-value="true" permanent theme="light">
         <v-row no-gutters class="fill-width">
-            <v-col class="d-flex justify-end">
-                <v-btn class="ma-4" size="medium" icon="mdi-account-circle"></v-btn>
+            <v-col cols="3" class="d-flex justify-start">
+                <v-img height="48" max-width="64" aspect-ratio="1" class="ma-3" src="/src/assets/hp_icon.webp"></v-img>
+            </v-col>
+            <v-col style="font-size:x-large; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-weight:200;" class="d-flex align-center justify-start">
+              <span> Print OS </span>
             </v-col>
         </v-row>
         <v-divider></v-divider>

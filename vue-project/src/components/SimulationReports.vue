@@ -1,15 +1,12 @@
 <template>
 	<v-app>
 		<v-dialog scrollable persistent class="detailed-report" max-width="500px" v-model="SimulationReportDialogue" content-class="overflow-y-auto">
-			<div style="max-height: 80vh; overflow-y: auto;">
+			<div style="max-height: 60vh; overflow-y: hidden; overflow-x:hidden;">
 				<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printJob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
 			</div>
 		</v-dialog>
-		<v-toolbar class="toolbar">
-			<v-toolbar-title class="header">Simulation</v-toolbar-title>
-		</v-toolbar>
 		<v-main class="pa-3">
-			<v-card class="large-module pa-3 mb-3">
+			<v-card style="width:700px" class="large-module pa-3 mb-3">
         		<simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
       		</v-card>
 			<v-card class="module pa-3 mb-3">
@@ -109,8 +106,17 @@ const getSimulationReports = async () => {
 			simulationReports.value = await response.json();
       		simulationReports.value.forEach( (report) => {
         	const dateObj = new Date(report.CreationTime);
-        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate();
-        	report.Time = dateObj.getHours() + ":" + dateObj.getMinutes();
+        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
+			let hours = dateObj.getHours().toString();
+			let minutes = dateObj.getMinutes().toString();
+			if (hours.length == 1){
+				hours = '0' + hours;
+			}
+			if (minutes.length == 1){
+				minutes = '0' + minutes;
+			}
+
+        	report.Time = hours + ":" + minutes;
       });
     } else {
 			console.log("Error fetching data. Response from server: " + String(response.status));
@@ -176,11 +182,11 @@ onMounted(async () => {
 
 .item-desc {
 	font-weight: bold;
-	font-size: large;
+	font-size: x-small;
 }
 
 .item-val {
-	font-size: large;
+	font-size: x-small;
 }
 
 </style>

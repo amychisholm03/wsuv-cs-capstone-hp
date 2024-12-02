@@ -1,11 +1,8 @@
 <template>
   <v-app theme="light">
-    <v-toolbar class="toolbar">
-        <v-toolbar-title class="header">Create Print Job</v-toolbar-title>
-    </v-toolbar> 
     <v-main>
       <v-card class="ma-3 pa-3" style="width: 800px; height:400px; border-width:2px;">
-        <v-card-title>Create New Print Job</v-card-title>
+        <v-card-title class="module-title">Create New Print Job</v-card-title>
         <v-form ref="printSettingsForm" fast-fail @submit.prevent="createPrintSettings">
           <v-text-field :rules="titleValidation" label="Title" v-model="printSettings.title" />
           <v-text-field :rules="pageCountValidation" label="Page Count" type="number"
