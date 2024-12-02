@@ -1,7 +1,9 @@
 <template>
-	<v-app theme="light">
-		<v-dialog scrollable persistent class="detailed-report" max-width="500px" v-model="SimulationReportDialogue">
-			<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printJob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
+	<v-app>
+		<v-dialog scrollable persistent class="detailed-report" max-width="500px" v-model="SimulationReportDialogue" content-class="overflow-y-auto">
+			<div style="max-height: 80vh; overflow-y: auto;">
+				<detailed-report @exit="SimulationReportDialogue = false" :report="selectedReport" :printJob="selectedPrintJob" :workflow="selectedWorkflow"></detailed-report>
+			</div>
 		</v-dialog>
 		<v-toolbar class="toolbar">
 			<v-toolbar-title class="header">Simulation</v-toolbar-title>
@@ -44,9 +46,6 @@ const selectSimulationReport = (id) => {
 	selectedReport.value = simulationReports.value.find(item => item._id === id)
 	selectedPrintJob.value = printJobs.value.find(item => item._id === selectedReport.value.PrintJobID)
 	selectedWorkflow.value = workflows.value.find(item => item._id === selectedReport.value.WorkflowID)
-	console.log(selectedReport.value)
-	console.log(selectedPrintJob.value)
-	console.log(selectedWorkflow.value)
 	SimulationReportDialogue.value = true
 }
 
@@ -183,4 +182,5 @@ onMounted(async () => {
 .item-val {
 	font-size: large;
 }
+
 </style>
