@@ -16,9 +16,6 @@
                     <v-text-field :readonly="true" density="compact" label="Page Count" v-model="printJob.PageCount"></v-text-field>
                     <v-text-field :readonly="true" density="compact" label="Rasterization Profile" v-model="printJob.RasterizationProfile"></v-text-field>
                     <v-text-field :readonly="true" density="compact" label="Total Time Taken (secs)" v-model="report.TotalTimeTaken"></v-text-field>
-                    <v-text-field :readonly="true" density="compact" label="Rasterization Time Taken (secs)" v-model="report.RasterizationTimeTaken"></v-text-field>
-
-
                 </v-card>
             </v-col>
             <v-col>
