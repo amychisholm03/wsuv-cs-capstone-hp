@@ -36,15 +36,19 @@
             <v-col>
                 <v-text-field :readonly="true" density="compact" label="Workflow Title" v-model="workflow.Title"></v-text-field>
                 <v-text-field :readonly="true" density="compact" label="Number of Steps" v-model="workflow.WorkflowSteps.length"></v-text-field>
-                <v-list>
-                    <v-text-field :readonly="true" density="compact" label="Workflow Steps"></v-text-field>
-                    <v-list-item v-for="(time, step) in report.StepTimes" :key="step">
-                    <span>
-                        <v-list-item-title> <strong>Step: </strong>{{ step }}</v-list-item-title>
-                        <v-list-item-subtitle> <strong>Time Taken:</strong> {{ time }} secs</v-list-item-subtitle>
-                    </span>
-                    </v-list-item>
-                </v-list>
+                <v-card class="pa-3"> 
+                    <span class="d-flex align-center justify-center mb-2" style="font-weight: bold;">Workflow Steps</span>
+                    <v-divider></v-divider>
+                    <v-list>
+                        <v-list-item v-for="(time, step) in report.StepTimes" :key="step">
+                        <span>
+                            <v-list-item-title> <strong>Step: </strong>{{ step }}</v-list-item-title>
+                            <v-list-item-subtitle> <strong>Time Taken:</strong> {{ time }} secs</v-list-item-subtitle>
+                        </span>
+
+                        </v-list-item>
+                    </v-list>
+                </v-card> 
             </v-col>
         </v-row>
     </v-app>
@@ -65,6 +69,7 @@ const dateTime = ref("");
 
 onMounted(async () => {
     dateTime.value = props.report.Date + "  " + props.report.Time
+    console.log(props.report);
 });
 </script>
 
