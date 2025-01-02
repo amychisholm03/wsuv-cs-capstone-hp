@@ -52,6 +52,7 @@
     import { ref, onMounted } from "vue";
     import { useRouter } from 'vue-router';
     import { API_URL, API_PORT } from "../consts.js";
+    import { getEntireCollection } from "./api.js";
 
     const router = useRouter();
     const routeTo = (where) => {
@@ -105,26 +106,8 @@
 
 //// API CALLS ////
     onMounted( async () => {
-        getWorkflowSteps()
+        workflowSteps.value = await getEntireCollection("WorkflowStep");
     })
-
-    const getWorkflowSteps = async () => {
-        try {
-            const url = `${API_URL}:${API_PORT}/getWorkflowStepList`;
-            const response = await fetch(url, {
-                method: 'GET',
-                mode: 'cors',
-                }
-            );
-            if (response.ok){ 
-                workflowSteps.value = await response.json();
-            } else {
-                console.log("Error fetching data. Response from server: " + String(response.status))
-            }
-        } catch (error) {
-            console.log('Error fetching list of workflow steps');     
-        }
-    }
     
     const createWorkflow = async () => {
         if (!validateCreatedWorkflow()){
