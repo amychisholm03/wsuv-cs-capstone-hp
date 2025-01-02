@@ -22,6 +22,7 @@ import DetailedReport from './SimulationReport/DetailedReport.vue';
 import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
 import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
 import { API_URL, API_PORT } from "../consts.js";
+import { getEntireCollection } from "./api.js";
 
 const workflows = ref([]);
 const printJobs = ref([]);
@@ -52,51 +53,11 @@ const selectSimulationReport = (id) => {
 ///////////////////
 
 /**
-* Get all print jobs
-*/
-const getPrintJobs = async () => {
-	try {
-		const url = `${API_URL}:${API_PORT}/query?CollectionName=PrintJob&Query={}`;
-		const response = await fetch(url, {
-			method: 'GET',
-			mode: 'cors',
-		});
-		if (response.ok) {
-			printJobs.value = await response.json();
-		} else {
-			console.log("Error fetching data. Response from server: " + String(response.status));
-		}
-	} catch (error) {
-		console.log('Error fetching list of print jobs');
-		console.log(error);
-	}
-}
-
-/**
-* Get all workflows.
-* @returns Array of workflow objects.
-*/
-const getWorkflows = async () => {
-	try {
-		const url = `${API_URL}:${API_PORT}/getWorkflowList`;
-		const response = await fetch(url, {
-			method: 'GET',
-			mode: 'cors',
-		});
-		if (response.ok) {
-			workflows.value = await response.json();
-		} else {
-			console.log("Error fetching data. Response from server: " + String(response.status))
-		}
-	} catch (error) {
-		console.log('Error fetching list of workflows');
-	}
-}
-
-/**
 * Get a list of simulation reports
 */
 const getSimulationReports = async () => {
+	//TODO: For some reason, this function resists being converted to 
+	//one that works with getEntireCollection
 	try {
 		const url = `${API_URL}:${API_PORT}/getSimulationReportList`;
 		const response = await fetch(url, {
@@ -105,31 +66,26 @@ const getSimulationReports = async () => {
 		});
 		if (response.ok) {
 			simulationReports.value = await response.json();
-      		simulationReports.value.forEach( (report) => {
-        	const dateObj = new Date(report.CreationTime);
-        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
-			let hours = dateObj.getHours().toString();
-			let minutes = dateObj.getMinutes().toString();
-			if (hours.length == 1){
-				hours = '0' + hours;
-			}
-			if (minutes.length == 1){
-				minutes = '0' + minutes;
-			}
-
-        	report.Time = hours + ":" + minutes;
+  		simulationReports.value.forEach( (report) => {
+      	const dateObj = new Date(report.CreationTime);
+      	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
+				let hours = dateObj.getHours().toString();
+				let minutes = dateObj.getMinutes().toString();
+				if (hours.length == 1) hours = '0' + hours;
+				if (minutes.length == 1) minutes = '0' + minutes;
+	      report.Time = hours + ":" + minutes;
       });
     } else {
 			console.log("Error fetching data. Response from server: " + String(response.status));
 		}
 	} catch (error) {
-		console.log('Error fetching list of simulation reports.');
+		console.log(`Error fetching list of simulation reports: ${error}`);
 	}
 }
 
 onMounted(async () => {
-	getWorkflows();
-	getPrintJobs();
+	workflows.value = await getEntireCollection("Workflow");
+	printJobs.value = await getEntireCollection("PrintJob");
 	await getSimulationReports();
 });
 </script>
