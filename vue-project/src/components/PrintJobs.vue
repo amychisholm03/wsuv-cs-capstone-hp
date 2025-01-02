@@ -37,6 +37,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
+import { API_URL, API_PORT } from "../consts.js";
 
 const router = useRouter();
 const routeTo = (where) => {
@@ -122,7 +123,7 @@ const validateCreatePrintSettings = () => {
       return false;
     }   
 
-    const url = "http://api.wsuv-hp-capstone.com:80/createJob";
+    const url = `${API_URL}:${API_PORT}/createJob`;
     const data = {
       Title: printSettings.value.title.toString(),
       PageCount: printSettings.value.pageCount.toString(),

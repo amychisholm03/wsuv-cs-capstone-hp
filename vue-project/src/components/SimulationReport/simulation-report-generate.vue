@@ -31,6 +31,7 @@
 
 <script setup>
   import { ref, onMounted, watch } from "vue";
+  import { API_URL, API_PORT } from "../../consts.js";
   const {printJobs, workflows } = defineProps({
       printJobs: Array,
       workflows: Array,
@@ -79,7 +80,7 @@
       if (!validateGenerateSimulationReport()) {
         return;
       }
-      const url = "http://api.wsuv-hp-capstone.com/generateSimulationReport?jobID=" + selectedPrintJob.value + "&workflowID=" + selectedWorkflow.value;
+      const url = `${API_URL}:${API_PORT}/generateSimulationReport?jobID=` + selectedPrintJob.value + "&workflowID=" + selectedWorkflow.value;
       const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',

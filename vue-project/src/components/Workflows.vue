@@ -51,6 +51,7 @@
 <script setup>
     import { ref, onMounted } from "vue";
     import { useRouter } from 'vue-router';
+    import { API_URL, API_PORT } from "../consts.js";
 
     const router = useRouter();
     const routeTo = (where) => {
@@ -109,7 +110,7 @@
 
     const getWorkflowSteps = async () => {
         try {
-            const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowStepList";
+            const url = `${API_URL}:${API_PORT}/getWorkflowStepList`;
             const response = await fetch(url, {
                 method: 'GET',
                 mode: 'cors',
@@ -129,7 +130,7 @@
         if (!validateCreatedWorkflow()){
             return false;
         }
-        const url = "http://api.wsuv-hp-capstone.com:80/createWorkflow";
+        const url = `${API_URL}:${API_PORT}/createWorkflow`;
         const data = {
             Title: workflowTitle.value.toString(),
             WorkflowSteps: selectedSteps.value,

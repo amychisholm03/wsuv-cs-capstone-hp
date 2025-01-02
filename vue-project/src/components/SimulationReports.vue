@@ -21,6 +21,7 @@ import { ref, onMounted } from "vue";
 import DetailedReport from './SimulationReport/DetailedReport.vue';
 import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
 import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
+import { API_URL, API_PORT } from "../consts.js";
 
 const workflows = ref([]);
 const printJobs = ref([]);
@@ -55,7 +56,7 @@ const selectSimulationReport = (id) => {
 */
 const getPrintJobs = async () => {
 	try {
-		const url = "http://api.wsuv-hp-capstone.com/query?CollectionName=PrintJob&Query={}";
+		const url = `${API_URL}:${API_PORT}/query?CollectionName=PrintJob&Query={}`;
 		const response = await fetch(url, {
 			method: 'GET',
 			mode: 'cors',
@@ -77,7 +78,7 @@ const getPrintJobs = async () => {
 */
 const getWorkflows = async () => {
 	try {
-		const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowList";
+		const url = `${API_URL}:${API_PORT}/getWorkflowList`;
 		const response = await fetch(url, {
 			method: 'GET',
 			mode: 'cors',
@@ -97,7 +98,7 @@ const getWorkflows = async () => {
 */
 const getSimulationReports = async () => {
 	try {
-		const url = "http://api.wsuv-hp-capstone.com:80/getSimulationReportList";
+		const url = `${API_URL}:${API_PORT}/getSimulationReportList`;
 		const response = await fetch(url, {
 			method: 'GET',
 			mode: 'cors',
