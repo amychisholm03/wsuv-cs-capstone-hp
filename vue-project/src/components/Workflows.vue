@@ -51,7 +51,7 @@
 <script setup>
     import { ref, onMounted, toRaw } from "vue";
     import { useRouter } from 'vue-router';
-    import { API_URL, API_PORT, getEntireCollection, formatLinearSteps, postWorkflow } from "./api.js";
+    import { getCollection, formatLinearSteps, postWorkflow } from "./api.js";
 
     const router = useRouter();
     const routeTo = (where) => {
@@ -104,8 +104,19 @@
     }
 
 //// API CALLS ////
+    const getWorkflowSteps = async () => {
+        try {
+            const response = await getCollection("WorkflowStep");
+            if (response.ok) workflowSteps.value = await response.json();
+            else throw new Error(String(response.status));
+        } catch (error) {
+            console.log(`Error fetching list of WorkflowSteps: ${error}`);
+        }
+    }
+
     onMounted( async () => {
-        workflowSteps.value = await getEntireCollection("WorkflowStep");
+        await getWorkflowSteps();
+        // workflowSteps.value = await getEntireCollection("WorkflowStep");
     })
     
     const createWorkflow = async () => {

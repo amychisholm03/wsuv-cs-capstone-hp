@@ -21,7 +21,7 @@ import { ref, onMounted } from "vue";
 import DetailedReport from './SimulationReport/DetailedReport.vue';
 import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
 import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
-import { API_URL, API_PORT, getEntireCollection } from "./api.js";
+import { getCollection } from "./api.js";
 
 const workflows = ref([]);
 const printJobs = ref([]);
@@ -55,22 +55,12 @@ const selectSimulationReport = (id) => {
 * Get a list of simulation reports
 */
 const getSimulationReports = async () => {
-	//TODO: For some reason, this function resists being converted to 
-	//one that works with the new API call
-
-
+	//TODO: Fix formatting
 	try {
-		const url = `${API_URL}:${API_PORT}/getSimulationReportList`;
-		// const url = `${API_URL}:${API_PORT}/SimulationReport`;
-		const response = await fetch(url, {
-			method: 'GET',
-			mode: 'cors',
-		});
+		const response = await getCollection("SimulationReport")
 		if (response.ok) {
 			let resp_json = await response.json();
-			console.log(resp_json);
 			simulationReports.value = resp_json;
-			// console.log(simulationReports.value);
   		simulationReports.value.forEach( (report) => {
       	const dateObj = new Date(report.CreationTime);
       	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
@@ -88,9 +78,29 @@ const getSimulationReports = async () => {
 	}
 }
 
+const getPrintJobs = async () => {
+	try {
+		const response = await getCollection("PrintJob");
+		if (response.ok) printJobs.value = await response.json();
+		else throw new Error(String(response.status));
+	} catch (error) {
+		console.log(`Error fetching list of PrintJobs: ${error}`);
+	}
+}
+
+const getWorkflows = async () => {
+	try {
+		const response = await getCollection("Workflow");
+		if (response.ok) workflows.value = await response.json();
+		else throw new Error(String(response.status));
+	} catch (error) {
+		console.log(`Error fetching list of Workflows: ${error}`);
+	}
+}
+
 onMounted(async () => {
-	workflows.value = await getEntireCollection("Workflow");
-	printJobs.value = await getEntireCollection("PrintJob");
+	await getPrintJobs();
+	await getWorkflows();
 	await getSimulationReports();
 });
 </script>

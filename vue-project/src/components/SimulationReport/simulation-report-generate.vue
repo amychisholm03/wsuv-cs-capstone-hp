@@ -31,7 +31,7 @@
 
 <script setup>
   import { ref, onMounted, watch, toRaw } from "vue";
-  import { API_URL, API_PORT, postSimulationReport } from "../api.js";
+  import { postSimulationReport } from "../api.js";
   const {printJobs, workflows } = defineProps({
       printJobs: Array,
       workflows: Array,

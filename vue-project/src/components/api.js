@@ -3,15 +3,12 @@ export const API_PORT = "80"
 // export const API_URL = "http://localhost"
 // export const API_PORT = "5040"
 
-export async function getEntireCollection(coll){
-	try {
-		const response = await fetch(`${API_URL}:${API_PORT}/${coll}`, 
-			{ method: 'GET', mode: 'cors' });
-		if (response.ok) return await response.json();
-		else throw new Error(String(response.status));
-	} catch (error) {
-		console.log(`Error fetching list of ${coll}s: ${error}`);
-	}
+
+export async function getCollection(coll){
+	return await fetch(`${API_URL}:${API_PORT}/${coll}`, { 
+		method: 'GET', 
+		mode: 'cors'
+	});
 }
 
 
@@ -42,6 +39,9 @@ export async function postWorkflow(Title, WorkflowSteps){
 }
 
 
+// Takes a list of steps and formats them as a graph, where each step's
+// prev step is the one before it in the array, and the next step 
+// is the one after it, for compatibility with previous implementation
 export function formatLinearSteps(steps){
 	let output = [];
 	for(let i = 0; i < steps.length; i++){
