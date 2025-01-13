@@ -38,6 +38,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
 import { API_URL, API_PORT } from "../consts.js";
+import { postPrintJob } from "./api.js";
 
 const router = useRouter();
 const routeTo = (where) => {
@@ -69,33 +70,39 @@ const printSettings = ref(
 
 //// METHODS ////
 const titleValidation = [
-  x => { if (x) return false; return 'Title can not be left empty'; }
+    x => { if (x) return true; return 'Title can not be left empty'; }
 ];
 
 const pageCountValidation = [
-  x => { if (x) return false; return 'Page count must be non-zero.'; }
+  x => { if (x) return true; return 'Page count must be non-zero.'; }
 ];
 
 const rasterizationProfileValidation = [
-  x => { if (x) return false; return 'Rasterization Profile can not be left empty.'; }
+  x => { if (x) return true; return 'Rasterization Profile can not be left empty.'; }
 ];
 
 const validateCreatePrintSettings = () => {
   const errors = [];
 
-  titleValidation.forEach(isInvalid => {
-    const result = isInvalid(printSettings.value.title);
-    if (result) errors.push(result);
+  titleValidation.forEach(rule => {
+    const result = rule(printSettings.value.title);
+    if (typeof result === "string") {
+      errors.push(result);
+    }
   });
 
-  pageCountValidation.isInvalid(isInvalid => {
-    const result = isInvalid(printSettings.value.pageCount);
-    if (result) errors.push(result);
+  pageCountValidation.forEach(rule => {
+    const result = rule(printSettings.value.pageCount);
+    if (typeof result === "string") {
+      errors.push(result);
+    }
   });
 
-  rasterizationProfileValidation.forEach(isInvalid => {
-    const result = isInvalid(printSettings.value.rasterizationProfile);
-    if (result) errors.push(result);
+  rasterizationProfileValidation.forEach(rule => {
+    const result = rule(printSettings.value.rasterizationProfile);
+    if (typeof result === "string") {
+      errors.push(result);
+    }
   });
 
   if (errors.length > 0) {
@@ -113,21 +120,10 @@ const validateCreatePrintSettings = () => {
   const createPrintSettings = async () => {
     if (!validateCreatePrintSettings()){
       return false;
-    }   
-
-    const url = `${API_URL}:${API_PORT}/createJob`;
-    const data = {
-      Title: printSettings.value.title.toString(),
-      PageCount: printSettings.value.pageCount.toString(),
-      RasterizationProfile: printSettings.value.rasterizationProfile.toString()
     }
 
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
+    const response = await postPrintJob(printSettings.value.title.toString(), 
+      Number(printSettings.value.pageCount), printSettings.value.rasterizationProfile.toString());
 
     if (!response.ok) {
       console.log("Error creating print job. Response from server: " + String(response.status))

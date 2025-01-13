@@ -57,29 +57,21 @@ const selectSimulationReport = (id) => {
 */
 const getSimulationReports = async () => {
 	//TODO: For some reason, this function resists being converted to 
-	//one that works with getEntireCollection
+	//one that works with the new API call
 
-	// simulationReports.value = await getEntireCollection("SimulationReport");
-	// console.log(simulationReports.value);
-	// simulationReports.value.forEach( (report) => {
-  // 	const dateObj = new Date(report.CreationTime);
-  // 	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
-	// 	let hours = dateObj.getHours().toString();
-	// 	let minutes = dateObj.getMinutes().toString();
-	// 	if (hours.length == 1) hours = '0' + hours;
-	// 	if (minutes.length == 1) minutes = '0' + minutes;
-  //   report.Time = hours + ":" + minutes;
-  // });
 
 	try {
 		const url = `${API_URL}:${API_PORT}/getSimulationReportList`;
+		// const url = `${API_URL}:${API_PORT}/SimulationReport`;
 		const response = await fetch(url, {
 			method: 'GET',
 			mode: 'cors',
 		});
 		if (response.ok) {
-			simulationReports.value = await response.json();
-			console.log(simulationReports.value);
+			let resp_json = await response.json();
+			console.log(resp_json);
+			simulationReports.value = resp_json;
+			// console.log(simulationReports.value);
   		simulationReports.value.forEach( (report) => {
       	const dateObj = new Date(report.CreationTime);
       	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();

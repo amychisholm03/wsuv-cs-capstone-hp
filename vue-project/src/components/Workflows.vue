@@ -14,7 +14,7 @@
                         :items="workflowSteps"
                         label="Select Workflow Steps"
                         item-title="Title"
-                        item-value="_id"
+                        item-value="id"
                         multiple
                     >
                         <template v-slot:selection="{ item, index }">
@@ -49,10 +49,10 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
+    import { ref, onMounted, toRaw } from "vue";
     import { useRouter } from 'vue-router';
     import { API_URL, API_PORT } from "../consts.js";
-    import { getEntireCollection } from "./api.js";
+    import { getEntireCollection, formatLinearSteps, postWorkflow } from "./api.js";
 
     const router = useRouter();
     const routeTo = (where) => {
@@ -113,17 +113,9 @@
         if (!validateCreatedWorkflow()){
             return false;
         }
-        const url = `${API_URL}:${API_PORT}/createWorkflow`;
-        const data = {
-            Title: workflowTitle.value.toString(),
-            WorkflowSteps: selectedSteps.value,
-        }
-        const response = await fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
+        
+        let steps = formatLinearSteps(toRaw(selectedSteps.value));
+        const response = await postWorkflow(workflowTitle.value.toString(), steps);
 
         if (!response.ok) {
             console.log("Error posting data. Response from server: " + String(response.status))
