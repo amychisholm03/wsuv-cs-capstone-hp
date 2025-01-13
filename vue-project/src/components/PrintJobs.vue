@@ -37,8 +37,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
-import { API_URL, API_PORT } from "../consts.js";
-import { postPrintJob } from "./api.js";
+import { API_URL, API_PORT, postPrintJob } from "./api.js";
 
 const router = useRouter();
 const routeTo = (where) => {

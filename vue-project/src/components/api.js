@@ -1,5 +1,5 @@
-import { API_URL, API_PORT } from "../consts.js";
-
+export const API_URL = "http://localhost"
+export const API_PORT = "5040"
 
 export async function getEntireCollection(coll){
 	try {

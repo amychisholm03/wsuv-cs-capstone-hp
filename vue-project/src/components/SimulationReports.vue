@@ -21,8 +21,7 @@ import { ref, onMounted } from "vue";
 import DetailedReport from './SimulationReport/DetailedReport.vue';
 import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
 import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
-import { API_URL, API_PORT } from "../consts.js";
-import { getEntireCollection } from "./api.js";
+import { API_URL, API_PORT, getEntireCollection } from "./api.js";
 
 const workflows = ref([]);
 const printJobs = ref([]);
