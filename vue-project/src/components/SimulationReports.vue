@@ -7,7 +7,7 @@
 		</v-dialog>
 		<v-main class="pa-3">
 			<v-card style="width:700px" class="large-module pa-3 mb-3">
-        		<simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
+        		<simulation-report-history style="width:100%;" :printJobs="printJobs" @select-report="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
       		</v-card>
 			<v-card class="module pa-3 mb-3">
 		      <simulation-report-generate style="height:300px; width:800px;"  @create="getSimulationReports" :printJobs="printJobs" :workflows="workflows"></simulation-report-generate>
@@ -36,14 +36,11 @@ const selectedWorkflow = ref(null)
 //// User Actions
 //////////////////////
 
-/**
-* TODO: IMPLEMENT THIS
-* activated when you select a simulation report
-*/
 const selectSimulationReport = (id) => {
-	selectedReport.value = simulationReports.value.find(item => item._id === id)
-	selectedPrintJob.value = printJobs.value.find(item => item._id === selectedReport.value.PrintJobID)
-	selectedWorkflow.value = workflows.value.find(item => item._id === selectedReport.value.WorkflowID)
+  console.log(id);
+	selectedReport.value = simulationReports.value.find(item => item.id === id)
+	selectedPrintJob.value = printJobs.value.find(item => item.id === selectedReport.value.PrintJobID)
+	selectedWorkflow.value = workflows.value.find(item => item.id === selectedReport.value.WorkflowID)
 	SimulationReportDialogue.value = true
 }
 
@@ -61,6 +58,8 @@ const getSimulationReports = async () => {
 		if (response.ok) {
 			simulationReports.value = await response.json();
   		simulationReports.value.forEach( (report) => {
+
+        // parse the creation time to a human readable format
       	const dateObj = new Date(report.CreationTime);
       	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
 				let hours = dateObj.getHours().toString();
@@ -68,6 +67,7 @@ const getSimulationReports = async () => {
 				if (hours.length == 1) hours = '0' + hours;
 				if (minutes.length == 1) minutes = '0' + minutes;
 	      report.Time = hours + ":" + minutes;
+
       });
     } else {
 			console.log("Error fetching data. Response from server: " + String(response.status));
