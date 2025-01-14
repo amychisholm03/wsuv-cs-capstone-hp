@@ -59,8 +59,7 @@ const getSimulationReports = async () => {
 	try {
 		const response = await getCollection("SimulationReport")
 		if (response.ok) {
-			let resp_json = await response.json();
-			simulationReports.value = resp_json;
+			simulationReports.value = await response.json();
   		simulationReports.value.forEach( (report) => {
       	const dateObj = new Date(report.CreationTime);
       	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
