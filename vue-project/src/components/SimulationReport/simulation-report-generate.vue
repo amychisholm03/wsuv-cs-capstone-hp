@@ -3,11 +3,11 @@
     <span class="module-title" style="margin-left:10px; margin-bottom:24px;">New Simulation Report</span>
       <v-form class="pa-2 mr-7" fast-fail ref="selectPreviousWorkflowForm"
         @submit.prevent="generateSimulationReport">
-        <v-select v-model="selectedPrintJob" :rules="printJobTitleValidation" label="Select Print Job"
-          :items="printJobs" item-title="Title" item-value="_id" outlined>
+        <v-select v-model="selectedPrintJob" return-object :rules="printJobTitleValidation" label="Select Print Job"
+          :items="printJobs" item-title="Title" item-value="id" outlined>
         </v-select>
-        <v-select v-model="selectedWorkflow" :rules="selectedWorkflowValidation" :items="workflows"
-          label="Select Workflow" item-title="Title" item-value="_id" outlined>
+        <v-select v-model="selectedWorkflow" return-object :rules="selectedWorkflowValidation" :items="workflows"
+          label="Select Workflow" item-title="Title" item-value="id" outlined>
           <template v-slot:item="{ props }">
             <v-list-item v-bind="props"></v-list-item>
           </template>
@@ -30,11 +30,12 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, watch } from "vue";
+  import { ref, onMounted, watch, toRaw } from "vue";
+  import { postSimulationReport } from "../api.js";
   const {printJobs, workflows } = defineProps({
       printJobs: Array,
       workflows: Array,
-    });
+  });
 
   const emit = defineEmits(['create'])
 
@@ -79,12 +80,9 @@
       if (!validateGenerateSimulationReport()) {
         return;
       }
-      const url = "http://api.wsuv-hp-capstone.com/generateSimulationReport?jobID=" + selectedPrintJob.value + "&workflowID=" + selectedWorkflow.value;
-      const response = await fetch(url, {
-        method: 'GET',
-        mode: 'cors',
-      }
-      );
+      
+      const response = await postSimulationReport(toRaw(selectedPrintJob)._rawValue.id, 
+        toRaw(selectedWorkflow)._rawValue.id);
 
       if (!response.ok) {
         console.log("Error generating report. Response from server: " + String(response.status));
@@ -105,7 +103,7 @@
 
 
     } catch (error) {
-      console.log("An error occurred generating the simulation report.");
+      console.log("An error occurred generating the simulation report: " + error);
     }
   }
 

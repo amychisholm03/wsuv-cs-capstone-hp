@@ -58,9 +58,9 @@
       <v-list style="margin:0; padding:0;">
       <v-list-item v-for="(report, index) in simulationReportsDisplay" style="margin:0; padding:0;"
         :key="index">
-        <v-card class="report-history-item" @click="$emit('selectreport', report._id)">
+        <v-card class="report-history-item" @click="$emit('select-report', report.id)">
           <!--Workflow has defined printjob title-->
-          <div v-if="report.PrintJobTitle">
+          <div >
             <v-row class="pa-0 ml-0 mt-2">
               <v-col cols="3" class="pa-0 ma-0">
                 <v-card-text class="ml-5 mb-1 pa-0 item-desc">Print Job:</v-card-text>
@@ -69,9 +69,9 @@
 
               <v-col cols="3" class="pa-0 mb-2">
                 <v-card-text
-                  class="ml-0 mb-1 pa-0 item-val">{{ report.PrintJobTitle }}</v-card-text>
+                  class="ml-0 mb-1 pa-0 item-val">{{ report.PrintJobTitle ? report.PrintJobTitle : 'N/A' }}</v-card-text>
                 <v-card-text
-                  class="ml-0 ma-0 pa-0 item-val">{{ report.WorkflowTitle }}</v-card-text>
+                  class="ml-0 ma-0 pa-0 item-val">{{ report.WorkflowTitle ? report.WorkflowTitle : 'N/A' }}</v-card-text>
               </v-col>
 
               <v-col cols="3" class="pa-0 ma-0">
@@ -79,10 +79,10 @@
                 <v-card-text class="ml-5 pa-0 item-desc">Rasterization Time:</v-card-text>
               </v-col>
               <v-col cols="3" class="pa-0 mb-2">
-                <v-card-text class="ml-0 mb-1 pa-0 item-val">{{ report.TotalTimeTaken }}
+                <v-card-text class="ml-0 mb-1 pa-0 item-val">{{ report.TotalTimeTaken ? report.TotalTimeTaken : 'N/A' }}
                   secs.</v-card-text>
                 <v-card-text
-                  class="ml-0 ma-0 pa-0 item-val">{{ report.RasterizationTimeTaken }} secs.
+                  class="ml-0 ma-0 pa-0 item-val">{{ report.RasterizationTimeTaken ? report.RasterizationTimeTaken : 'N/A' }} secs.
                 </v-card-text>
               </v-col>
             </v-row>
@@ -106,27 +106,31 @@
 
 <script setup>
   import { nextTick, ref, onMounted, watch } from "vue";
+
+  /*
+    Props
+  */
   const {simulationReports, workflows, printJobs} = defineProps({
       simulationReports: Array,
       workflows : Array,
       printJobs: Array,
     });
 
-  const emit = defineEmits(['selectreport']);
+  /*
+    Emits
+  */
+  const emit = defineEmits(['select-report']);
 
+  /*
+    Reactive Variables
+  */
   const simulationReportsDisplay = ref([]);
   const searchValue = ref('');
   const drawer = ref(false);
-
   const selectedPrintJobs = ref([]);
   const selectedWorkflows = ref([]);
-
   const fromDate = ref(null);
   const toDate = ref(null);
-
-  const selectReport = (report) => {
-    emit('selectreport', report);
-  };
 
   ///////////////////////////////
   ///// Filters and Searching
@@ -182,7 +186,6 @@
     },
     { immediate: true }
   );
-
 
   onMounted( async () => {
     simulationReportsDisplay.value = simulationReports;

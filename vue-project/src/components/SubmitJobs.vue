@@ -1,3 +1,4 @@
+<!-- Not Used? -->
 <template>
     <v-app theme="light">
         <v-toolbar class="toolbar">
@@ -34,6 +35,7 @@
 <script setup>
     import { ref, onMounted } from "vue";
     import { useRouter } from 'vue-router';
+    import { API_URL, API_PORT } from "./api.js";
 
     const router = useRouter();
     const routeTo = (where) => {
@@ -83,7 +85,7 @@
 
     const getWorkflows = async () => {
         try {
-            const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowList";
+            const url = `${API_URL}:${API_PORT}/getWorkflowList`;
             const response = await fetch(url, {
                 method: 'GET',
                 mode: 'cors',

@@ -7,7 +7,7 @@
 		</v-dialog>
 		<v-main class="pa-3">
 			<v-card style="width:700px" class="large-module pa-3 mb-3">
-        		<simulation-report-history style="width:100%;" :printJobs="printJobs" @selectreport="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
+        		<simulation-report-history style="width:100%;" :printJobs="printJobs" @select-report="selectSimulationReport" :workflows="workflows" :simulationReports="simulationReports"></simulation-report-history>
       		</v-card>
 			<v-card class="module pa-3 mb-3">
 		      <simulation-report-generate style="height:300px; width:800px;"  @create="getSimulationReports" :printJobs="printJobs" :workflows="workflows"></simulation-report-generate>
@@ -21,6 +21,7 @@ import { ref, onMounted } from "vue";
 import DetailedReport from './SimulationReport/DetailedReport.vue';
 import SimulationReportHistory from './SimulationReport/simulation-report-history.vue';
 import SimulationReportGenerate from './SimulationReport/simulation-report-generate.vue';
+import { getCollection } from "./api.js";
 
 const workflows = ref([]);
 const printJobs = ref([]);
@@ -35,14 +36,11 @@ const selectedWorkflow = ref(null)
 //// User Actions
 //////////////////////
 
-/**
-* TODO: IMPLEMENT THIS
-* activated when you select a simulation report
-*/
 const selectSimulationReport = (id) => {
-	selectedReport.value = simulationReports.value.find(item => item._id === id)
-	selectedPrintJob.value = printJobs.value.find(item => item._id === selectedReport.value.PrintJobID)
-	selectedWorkflow.value = workflows.value.find(item => item._id === selectedReport.value.WorkflowID)
+  console.log(id);
+	selectedReport.value = simulationReports.value.find(item => item.id === id)
+	selectedPrintJob.value = printJobs.value.find(item => item.id === selectedReport.value.PrintJobID)
+	selectedWorkflow.value = workflows.value.find(item => item.id === selectedReport.value.WorkflowID)
 	SimulationReportDialogue.value = true
 }
 
@@ -51,84 +49,57 @@ const selectSimulationReport = (id) => {
 ///////////////////
 
 /**
-* Get all print jobs
-*/
-const getPrintJobs = async () => {
-	try {
-		const url = "http://api.wsuv-hp-capstone.com/query?CollectionName=PrintJob&Query={}";
-		const response = await fetch(url, {
-			method: 'GET',
-			mode: 'cors',
-		});
-		if (response.ok) {
-			printJobs.value = await response.json();
-		} else {
-			console.log("Error fetching data. Response from server: " + String(response.status));
-		}
-	} catch (error) {
-		console.log('Error fetching list of print jobs');
-		console.log(error);
-	}
-}
-
-/**
-* Get all workflows.
-* @returns Array of workflow objects.
-*/
-const getWorkflows = async () => {
-	try {
-		const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowList";
-		const response = await fetch(url, {
-			method: 'GET',
-			mode: 'cors',
-		});
-		if (response.ok) {
-			workflows.value = await response.json();
-		} else {
-			console.log("Error fetching data. Response from server: " + String(response.status))
-		}
-	} catch (error) {
-		console.log('Error fetching list of workflows');
-	}
-}
-
-/**
 * Get a list of simulation reports
 */
 const getSimulationReports = async () => {
+	//TODO: Fix formatting
 	try {
-		const url = "http://api.wsuv-hp-capstone.com:80/getSimulationReportList";
-		const response = await fetch(url, {
-			method: 'GET',
-			mode: 'cors',
-		});
+		const response = await getCollection("SimulationReport")
 		if (response.ok) {
 			simulationReports.value = await response.json();
-      		simulationReports.value.forEach( (report) => {
-        	const dateObj = new Date(report.CreationTime);
-        	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
-			let hours = dateObj.getHours().toString();
-			let minutes = dateObj.getMinutes().toString();
-			if (hours.length == 1){
-				hours = '0' + hours;
-			}
-			if (minutes.length == 1){
-				minutes = '0' + minutes;
-			}
+  		simulationReports.value.forEach( (report) => {
 
-        	report.Time = hours + ":" + minutes;
+        // parse the creation time to a human readable format
+      	const dateObj = new Date(report.CreationTime);
+      	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
+				let hours = dateObj.getHours().toString();
+				let minutes = dateObj.getMinutes().toString();
+				if (hours.length == 1) hours = '0' + hours;
+				if (minutes.length == 1) minutes = '0' + minutes;
+	      report.Time = hours + ":" + minutes;
+
       });
     } else {
 			console.log("Error fetching data. Response from server: " + String(response.status));
 		}
 	} catch (error) {
-		console.log('Error fetching list of simulation reports.');
+		console.log(`Error fetching list of simulation reports: ${error}`);
+	}
+}
+
+const getPrintJobs = async () => {
+	try {
+		const response = await getCollection("PrintJob");
+		if (response.ok) printJobs.value = await response.json();
+		else throw new Error(String(response.status));
+	} catch (error) {
+		console.log(`Error fetching list of PrintJobs: ${error}`);
+	}
+}
+
+const getWorkflows = async () => {
+	try {
+		const response = await getCollection("Workflow");
+		if (response.ok) workflows.value = await response.json();
+		else throw new Error(String(response.status));
+	} catch (error) {
+		console.log(`Error fetching list of Workflows: ${error}`);
 	}
 }
 
 onMounted(async () => {
-	getWorkflows();
-	getPrintJobs();
+	await getPrintJobs();
+	await getWorkflows();
 	await getSimulationReports();
 });
 </script>

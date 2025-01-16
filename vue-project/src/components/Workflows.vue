@@ -14,7 +14,7 @@
                         :items="workflowSteps"
                         label="Select Workflow Steps"
                         item-title="Title"
-                        item-value="_id"
+                        item-value="id"
                         multiple
                     >
                         <template v-slot:selection="{ item, index }">
@@ -49,8 +49,9 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from "vue";
+    import { ref, onMounted, toRaw } from "vue";
     import { useRouter } from 'vue-router';
+    import { getCollection, formatLinearSteps, postWorkflow } from "./api.js";
 
     const router = useRouter();
     const routeTo = (where) => {
@@ -103,43 +104,28 @@
     }
 
 //// API CALLS ////
-    onMounted( async () => {
-        getWorkflowSteps()
-    })
-
     const getWorkflowSteps = async () => {
         try {
-            const url = "http://api.wsuv-hp-capstone.com:80/getWorkflowStepList";
-            const response = await fetch(url, {
-                method: 'GET',
-                mode: 'cors',
-                }
-            );
-            if (response.ok){ 
-                workflowSteps.value = await response.json();
-            } else {
-                console.log("Error fetching data. Response from server: " + String(response.status))
-            }
+            const response = await getCollection("WorkflowStep");
+            if (response.ok) workflowSteps.value = await response.json();
+            else throw new Error(String(response.status));
         } catch (error) {
-            console.log('Error fetching list of workflow steps');     
+            console.log(`Error fetching list of WorkflowSteps: ${error}`);
         }
     }
+
+    onMounted( async () => {
+        await getWorkflowSteps();
+        // workflowSteps.value = await getEntireCollection("WorkflowStep");
+    })
     
     const createWorkflow = async () => {
         if (!validateCreatedWorkflow()){
             return false;
         }
-        const url = "http://api.wsuv-hp-capstone.com:80/createWorkflow";
-        const data = {
-            Title: workflowTitle.value.toString(),
-            WorkflowSteps: selectedSteps.value,
-        }
-        const response = await fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
-        });
+        
+        let steps = formatLinearSteps(toRaw(selectedSteps.value));
+        const response = await postWorkflow(workflowTitle.value.toString(), steps);
 
         if (!response.ok) {
             console.log("Error posting data. Response from server: " + String(response.status))

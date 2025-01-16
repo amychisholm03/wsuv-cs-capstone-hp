@@ -37,6 +37,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
+import { postPrintJob } from "./api.js";
 
 const router = useRouter();
 const routeTo = (where) => {
@@ -68,9 +69,8 @@ const printSettings = ref(
 
 //// METHODS ////
 const titleValidation = [
-  x => { if (x) return true; return 'Title can not be left empty'; }
+    x => { if (x) return true; return 'Title can not be left empty'; }
 ];
-
 
 const pageCountValidation = [
   x => { if (x) return true; return 'Page count must be non-zero.'; }
@@ -95,7 +95,6 @@ const validateCreatePrintSettings = () => {
     if (typeof result === "string") {
       errors.push(result);
     }
-
   });
 
   rasterizationProfileValidation.forEach(rule => {
@@ -120,21 +119,10 @@ const validateCreatePrintSettings = () => {
   const createPrintSettings = async () => {
     if (!validateCreatePrintSettings()){
       return false;
-    }   
-
-    const url = "http://api.wsuv-hp-capstone.com:80/createJob";
-    const data = {
-      Title: printSettings.value.title.toString(),
-      PageCount: printSettings.value.pageCount.toString(),
-      RasterizationProfile: printSettings.value.rasterizationProfile.toString()
     }
 
-    const response = await fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
+    const response = await postPrintJob(printSettings.value.title.toString(), 
+      Number(printSettings.value.pageCount), printSettings.value.rasterizationProfile.toString());
 
     if (!response.ok) {
       console.log("Error creating print job. Response from server: " + String(response.status))
