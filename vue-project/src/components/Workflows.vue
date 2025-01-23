@@ -4,7 +4,7 @@
             <v-toolbar-title class="header">Workflows</v-toolbar-title>
         </v-toolbar>  -->
         <v-main>
-            <v-card class="ma-3 pa-3" style="width:700px; height:350px; border-width:2px;">
+            <v-card class="ma-3 pa-3" style="width:700px; height:370px; border-width:2px;">
                 <v-card-title class="module-title">Create New Workflow</v-card-title>
                 <v-form ref="createWorkflowForm" fast-fail @submit.prevent="createWorkflow">
                     <v-text-field :rules="workflowTitleValidation" label="Workflow Title" v-model="workflowTitle" />
@@ -29,6 +29,37 @@
                             </span>
                         </template>
                     </v-select>
+                    <div class="d-flex pa-4">
+                        <v-checkbox-btn
+                        v-model="enabled"
+                        class="pe-2"
+                        ></v-checkbox-btn>
+
+                        <v-select
+                            :disabled="!enabled"
+                            v-model="parallelSteps"
+                            :rules="parallelStepsValidation"
+                            :items="workflowSteps"
+                            label="Parallel Workflow Steps"
+                            item-title="Title"
+                            item-value="id"
+                            multiple
+                        >
+                            <template v-slot:selection="{ item, index }">
+                                <v-chip v-if="index < 2">
+                                    <span>{{ item.title }}</span>
+                                </v-chip>
+                                <span
+                                    v-if="index === 2"
+                                    class="text-grey text-caption align-self-center"
+                                >
+                                    (+{{ selectedSteps.length - 2 }} others)
+                                </span>
+                            </template>
+                        </v-select>
+
+                        
+                    </div>
                     <v-btn type="submit" class="mb" color="primary" :disabled="failure || success">
                         Create Workflow
                     </v-btn>
@@ -61,6 +92,9 @@
     const success = ref(false);
     const failure = ref(false);
 
+    const enabled = ref(false);
+    const parallelSteps = ref(null);
+
     const workflowTitle = ref('');
     const selectedSteps = ref(null);
     const workflowSteps = ref([]);
@@ -74,6 +108,10 @@
     const selectedStepsValidation = [
         x => { if (x && x.length !== 0) return true; return 'Workflow must contain at least one step'}
     ];
+
+    const parallelStepsValidation = [
+        x => { if (x && x.length !== 0) return true; return 'At least one step must be selected'}
+    ]
 
     const validateCreatedWorkflow = () => {
         const errors = []; 
@@ -116,7 +154,6 @@
 
     onMounted( async () => {
         await getWorkflowSteps();
-        // workflowSteps.value = await getEntireCollection("WorkflowStep");
     })
     
     const createWorkflow = async () => {
