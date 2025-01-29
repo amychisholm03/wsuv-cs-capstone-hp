@@ -65,7 +65,7 @@ const pageCountValidation = [
 ];
 
 const rasterizationProfileValidation = [
-  x => { if (x) return true; return 'Rasterization Profile can not be left empty.'; }
+  x => { if (x || x === 0) return true; return 'Rasterization Profile can not be left empty.'; }
 ];
 
 const validateCreatePrintjobSettings = () => {
