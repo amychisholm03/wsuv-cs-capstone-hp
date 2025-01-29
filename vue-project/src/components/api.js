@@ -58,7 +58,9 @@ export function formatLinearSteps(steps){
 
 export async function postSimulationReport(PrintJobID, WorkFlowID){
 	return await postNewDocument("SimulationReport", {
-		PrintJobID: PrintJobID,
-        WorkflowID: WorkFlowID
-	});
+    PrintJobID: PrintJobID,
+    WorkflowID: WorkFlowID
+  });
 }
+
+

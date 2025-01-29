@@ -76,14 +76,10 @@
 
               <v-col cols="3" class="pa-0 ma-0">
                 <v-card-text class="ml-5 mb-1 pa-0 item-desc">Total Time:</v-card-text>
-                <v-card-text class="ml-5 pa-0 item-desc">Rasterization Time:</v-card-text>
               </v-col>
               <v-col cols="3" class="pa-0 mb-2">
                 <v-card-text class="ml-0 mb-1 pa-0 item-val">{{ report.TotalTimeTaken ? report.TotalTimeTaken : 'N/A' }}
                   secs.</v-card-text>
-                <v-card-text
-                  class="ml-0 ma-0 pa-0 item-val">{{ report.RasterizationTimeTaken ? report.RasterizationTimeTaken : 'N/A' }} secs.
-                </v-card-text>
               </v-col>
             </v-row>
             <v-row class="pa-0 ml-0 mb-0 mt-2">
