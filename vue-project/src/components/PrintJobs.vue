@@ -3,13 +3,13 @@
     <v-main>
       <v-card class="ma-3 pa-3" style="width: 800px; height:400px; border-width:2px;">
         <v-card-title class="module-title">Create New Print Job</v-card-title>
-        <v-form ref="printSettingsForm" fast-fail @submit.prevent="createPrintSettings">
-          <v-text-field :rules="titleValidation" label="Title" v-model="printSettings.title" />
+        <v-form ref="printjobForm" fast-fail @submit.prevent="createPrintSettings">
+          <v-text-field :rules="titleValidation" label="Title" v-model="printjob.title" />
           <v-text-field :rules="pageCountValidation" label="Page Count" type="number"
-            v-model="printSettings.pageCount" />
-          <v-select v-model="printSettings.rasterizationProfile" :rules="rasterizationProfileValidation"
-            :items="printSettings.rasterizationProfiles" label="Rasterization Profile" item-title="text"
-            item-value="value" outlined>
+            v-model="printjob.pageCount" />
+          <v-select v-model="printjob.RasterizationProfileID" :rules="rasterizationProfileValidation"
+            :items="rasterizationProfiles" label="Rasterization Profile" item-title="title"
+            item-value="id" outlined>
             <template v-slot:item="{ props, item }">
               <v-list-item v-bind="props" :subtitle="item.raw.profile"></v-list-item>
             </template>
@@ -37,7 +37,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from 'vue-router';
-import { postPrintJob } from "./api.js";
+import { postPrintJob, getCollection } from "./api.js";
 
 const router = useRouter();
 const routeTo = (where) => {
@@ -46,26 +46,14 @@ const routeTo = (where) => {
 
 const success = ref(false);
 const failure = ref(false);
-
-const printSettings = ref(
+const rasterizationProfiles = ref([]);
+const printjob = ref(
   {
     title: '',
     pageCount: '',
-    rasterizationProfile: '',
-    rasterizationProfiles: [
-      { text: 'Black', value: 'Black', profile: 'Standard Color Profile' },
-      { text: 'CMY (Cyan, Magenta, Yellow)', value: 'CMY', profile: 'Standard Color Profile' },
-      { text: 'CMYK (Cyan, Magenta, Yellow, Black)', value: 'CMYK', profile: 'Standard Color Profile' },
-      { text: 'RGB (Red, Green, Blue)', value: 'RGB', profile: 'Standard Color Profile' },
-      { text: 'CMYK + Orange + Violet', value: 'CMYKOV', profile: 'Extended Color Profile' },
-      { text: 'CMYK + Orange + Violet + Extra Colorant 1', value: 'CMYKOVM1', profile: 'Extended Color Profile' },
-      { text: 'High Quality (Best Detail)', value: 'HighQuality', profile: 'Specialized Profile' },
-      { text: 'Draft (Fast, Low-Quality)', value: 'Draft', profile: 'Specialized Profile' },
-      { text: 'Photographic (Rich Color, High Detail)', value: 'Photographic', profile: 'Specialized Profile' },
-      { text: 'Line Art (Crisp Lines, No Gradients)', value: 'LineArt', profile: 'Specialized Profile' },
-    ],
-  });
-
+    RasterizationProfileID: null,
+  }
+);
 
 //// METHODS ////
 const titleValidation = [
@@ -77,28 +65,28 @@ const pageCountValidation = [
 ];
 
 const rasterizationProfileValidation = [
-  x => { if (x) return true; return 'Rasterization Profile can not be left empty.'; }
+  x => { if (x || x === 0) return true; return 'Rasterization Profile can not be left empty.'; }
 ];
 
-const validateCreatePrintSettings = () => {
+const validateCreatePrintjobSettings = () => {
   const errors = [];
 
   titleValidation.forEach(rule => {
-    const result = rule(printSettings.value.title);
+    const result = rule(printjob.value.title);
     if (typeof result === "string") {
       errors.push(result);
     }
   });
 
   pageCountValidation.forEach(rule => {
-    const result = rule(printSettings.value.pageCount);
+    const result = rule(printjob.value.pageCount);
     if (typeof result === "string") {
       errors.push(result);
     }
   });
 
   rasterizationProfileValidation.forEach(rule => {
-    const result = rule(printSettings.value.rasterizationProfile);
+    const result = rule(printjob.value.RasterizationProfileID);
     if (typeof result === "string") {
       errors.push(result);
     }
@@ -115,30 +103,45 @@ const validateCreatePrintSettings = () => {
   return true;
 }
 
-  //// API CALLS ////
-  const createPrintSettings = async () => {
-    if (!validateCreatePrintSettings()){
-      return false;
-    }
-
-    const response = await postPrintJob(printSettings.value.title.toString(), 
-      Number(printSettings.value.pageCount), printSettings.value.rasterizationProfile.toString());
-
-    if (!response.ok) {
-      console.log("Error creating print job. Response from server: " + String(response.status))
-      failure.value=true;
-      setTimeout(() => {
-        failure.value=false;
-      }, 2000);
-      return;
-    } else {
-      failure.value=false;
-      success.value=true;
-      setTimeout(() => {
-        success.value=false;
-      }, 2000);
-    }
+//// API CALLS ////
+const createPrintSettings = async () => {
+  if (!validateCreatePrintjobSettings()){
+    return false;
   }
+
+  const response = await postPrintJob(
+    String(printjob.value.title),
+    Number(printjob.value.pageCount),
+    Number(printjob.value.RasterizationProfileID)
+  );
+
+  if (!response.ok) {
+    console.log("Error creating print job. Response from server: " + String(response.status))
+    failure.value=true;
+    setTimeout(() => {
+      failure.value=false;
+    }, 2000);
+    return;
+  } else {
+    failure.value=false;
+    success.value=true;
+    setTimeout(() => {
+      success.value=false;
+    }, 2000);
+  }
+}
+
+const getRasterizationProfiles = async () => {
+  const response = await getCollection("RasterizationProfile");
+  if (response.ok){
+    rasterizationProfiles.value = await response.json();
+  }
+}
+
+onMounted( async () => {
+    await getRasterizationProfiles();
+})
+
 </script>
 
 <style>

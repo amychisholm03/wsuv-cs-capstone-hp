@@ -37,7 +37,6 @@ const selectedWorkflow = ref(null)
 //////////////////////
 
 const selectSimulationReport = (id) => {
-  console.log(id);
 	selectedReport.value = simulationReports.value.find(item => item.id === id)
 	selectedPrintJob.value = printJobs.value.find(item => item.id === selectedReport.value.PrintJobID)
 	selectedWorkflow.value = workflows.value.find(item => item.id === selectedReport.value.WorkflowID)
@@ -54,13 +53,14 @@ const selectSimulationReport = (id) => {
 const getSimulationReports = async () => {
 	//TODO: Fix formatting
 	try {
-		const response = await getCollection("SimulationReport")
+		const response = await getCollection("SimulationReport");
 		if (response.ok) {
 			simulationReports.value = await response.json();
+      console.log(simulationReports.value);
   		simulationReports.value.forEach( (report) => {
 
         // parse the creation time to a human readable format
-      	const dateObj = new Date(report.CreationTime);
+      	const dateObj = new Date(report.CreationTime * 1000);
       	report.Date= dateObj.getMonth()+1  + "/" + dateObj.getDate() + "/" + dateObj.getFullYear();
 				let hours = dateObj.getHours().toString();
 				let minutes = dateObj.getMinutes().toString();

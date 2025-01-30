@@ -99,7 +99,7 @@
     const selectedSteps = ref(null);
     const workflowSteps = ref([]);
 
-    
+
     //// METHODS ////
     const workflowTitleValidation = [
         x => { if (x) return true; return 'Workflow title cannot not be left empty'}
@@ -114,7 +114,7 @@
     ]
 
     const validateCreatedWorkflow = () => {
-        const errors = []; 
+        const errors = [];
         workflowTitleValidation.forEach(rule => {
             const result = rule(workflowTitle.value);
             if (typeof result === "string"){
@@ -138,15 +138,19 @@
             }, 2000);
             return false;
         }
-        return true; 
+        return true;
     }
 
 //// API CALLS ////
     const getWorkflowSteps = async () => {
         try {
-            const response = await getCollection("WorkflowStep");
-            if (response.ok) workflowSteps.value = await response.json();
-            else throw new Error(String(response.status));
+          const response = await getCollection("WorkflowStep");
+          if (response.ok) {
+            workflowSteps.value = await response.json();
+            console.log(workflowSteps.value);
+          } else {
+            throw new Error(String(response.status));
+          }
         } catch (error) {
             console.log(`Error fetching list of WorkflowSteps: ${error}`);
         }
@@ -155,12 +159,12 @@
     onMounted( async () => {
         await getWorkflowSteps();
     })
-    
+
     const createWorkflow = async () => {
         if (!validateCreatedWorkflow()){
             return false;
         }
-        
+
         let steps = formatLinearSteps(toRaw(selectedSteps.value));
         const response = await postWorkflow(workflowTitle.value.toString(), steps);
 
