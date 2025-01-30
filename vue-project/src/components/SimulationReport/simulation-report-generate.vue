@@ -80,9 +80,11 @@
       if (!validateGenerateSimulationReport()) {
         return;
       }
-      
-      const response = await postSimulationReport(toRaw(selectedPrintJob)._rawValue.id, 
-        toRaw(selectedWorkflow)._rawValue.id);
+
+      const response = await postSimulationReport(
+        toRaw(selectedPrintJob)._rawValue.id,
+        toRaw(selectedWorkflow)._rawValue.id
+      );
 
       if (!response.ok) {
         console.log("Error generating report. Response from server: " + String(response.status));
@@ -99,9 +101,6 @@
         success.value=false;
       }, 2000);
       return;
-
-
-
     } catch (error) {
       console.log("An error occurred generating the simulation report: " + error);
     }

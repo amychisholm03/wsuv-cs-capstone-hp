@@ -1,12 +1,12 @@
-export const API_URL = "http://api.wsuv-hp-capstone.com"
-export const API_PORT = "80"
-// export const API_URL = "http://localhost"
-// export const API_PORT = "5040"
+//export const API_URL = "http://api.wsuv-hp-capstone.com"
+//export const API_PORT = "80"
+export const API_URL = "http://localhost"
+export const API_PORT = "5040"
 
 
 export async function getCollection(coll){
-	return await fetch(`${API_URL}:${API_PORT}/${coll}`, { 
-		method: 'GET', 
+	return await fetch(`${API_URL}:${API_PORT}/${coll}`, {
+		method: 'GET',
 		mode: 'cors'
 	});
 }
@@ -22,11 +22,11 @@ async function postNewDocument(coll, doc){
 }
 
 
-export async function postPrintJob(Title, PageCount, RasterizationProfile){
+export async function postPrintJob(Title, PageCount, RasterizationProfileID){
 	return await postNewDocument("PrintJob", {
 		Title: Title,
 		PageCount: PageCount,
-		RasterizationProfile: RasterizationProfile
+		RasterizationProfileID: RasterizationProfileID
 	});
 }
 
@@ -40,13 +40,14 @@ export async function postWorkflow(Title, WorkflowSteps){
 
 
 // Takes a list of steps and formats them as a graph, where each step's
-// prev step is the one before it in the array, and the next step 
+// prev step is the one before it in the array, and the next step
 // is the one after it, for compatibility with previous implementation
 export function formatLinearSteps(steps){
 	let output = [];
 	for(let i = 0; i < steps.length; i++){
+    console.log(steps[i]);
 		output.push({
-			id: steps[i],
+			WorkflowStepID: steps[i],
 			Prev: (i > 0) ? [i-1] : [],
 			Next: (i < steps.length-1) ? [i+1] : []
 		});
@@ -57,7 +58,9 @@ export function formatLinearSteps(steps){
 
 export async function postSimulationReport(PrintJobID, WorkFlowID){
 	return await postNewDocument("SimulationReport", {
-		PrintJobID: PrintJobID,
-        WorkflowID: WorkFlowID
-	});
+    PrintJobID: PrintJobID,
+    WorkflowID: WorkFlowID
+  });
 }
+
+

@@ -7,15 +7,15 @@
                 >
                 Detailed Simulation Report
                 </v-col>
-                <v-col 
+                <v-col
                     cols="2"
                     class="d-flex align-center justify-end"
                     align="right"
                 >
-                    <v-btn 
+                    <v-btn
                         class="close-button d-flex align-center"
                         @click="$emit('exit')"
-                        icon 
+                        icon
                         tile
                     >
                         <v-icon>
@@ -28,13 +28,13 @@
         <v-row class="mt-1 pl-6 pr-6">
             <v-col>
                 <v-text-field :readonly="true" density="compact" label="Date Created" v-model="dateTime"></v-text-field>
-                <v-text-field :readonly="true" density="compact" label="Print Job Title" v-model="printJob.Title"></v-text-field>
+                <v-text-field :readonly="true" density="compact" label="Print Job Title" v-model="report.PrintJobTitle"></v-text-field>
                 <v-text-field :readonly="true" density="compact" label="Page Count" v-model="printJob.PageCount"></v-text-field>
-                <v-text-field :readonly="true" density="compact" label="Rasterization Profile" v-model="printJob.RasterizationProfile"></v-text-field>
+                <v-text-field :readonly="true" density="compact" label="Rasterization Profile" v-model="report.RasterizationProfile"></v-text-field>
                 <v-text-field :readonly="true" density="compact" label="Total Time Taken (secs)" v-model="report.TotalTimeTaken"></v-text-field>
             </v-col>
             <v-col>
-                <v-text-field :readonly="true" density="compact" label="Workflow Title" v-model="workflow.Title"></v-text-field>
+                <v-text-field :readonly="true" density="compact" label="Workflow Title" v-model="report.WorkflowTitle"></v-text-field>
                 <v-text-field :readonly="true" density="compact" label="Number of Steps" v-model="workflow.WorkflowSteps.length"></v-text-field>
                 <v-list>
                     <v-text-field :readonly="true" density="compact" label="Workflow Steps"></v-text-field>
