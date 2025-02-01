@@ -5,7 +5,6 @@
       style="margin-left:10px; margin-bottom:24px;"
     >New Simulation Report</span>
     <v-form
-      ref="selectPreviousWorkflowForm"
       class="mr-7 pa-2"
       fast-fail
       @submit.prevent="generateSimulationReport"
@@ -74,7 +73,7 @@
 <script setup>
   import { ref, onMounted, watch, toRaw } from "vue";
   import { postSimulationReport } from "../api.js";
-  const {printJobs, workflows } = defineProps({
+  const {printJobs = null, workflows = null } = defineProps({
       printJobs: Array,
       workflows: Array,
   });
@@ -88,12 +87,12 @@
   const printJobTitleValidation = [x => {
  if (x) {
 return true;
-} return 'Print job title cannot not be left empty' 
+} return 'Print job title cannot not be left empty'
 }];
   const selectedWorkflowValidation = [x => {
  if (x) {
 return true;
-} return 'Workflow must be selected'; 
+} return 'Workflow must be selected';
 }];
 
   const validateGenerateSimulationReport = () => {

@@ -3,7 +3,7 @@
     <!--
       <v-toolbar class="toolbar">
       <v-toolbar-title class="header">Workflows</v-toolbar-title>
-      </v-toolbar>  
+      </v-toolbar>
     -->
     <v-main>
       <v-card
@@ -14,7 +14,6 @@
           Create New Workflow
         </v-card-title>
         <v-form
-          ref="createWorkflowForm"
           fast-fail
           @submit.prevent="createWorkflow"
         >

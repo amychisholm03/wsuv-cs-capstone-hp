@@ -5,15 +5,14 @@
       <v-toolbar-title class="header">
         Submit Print Jobs
       </v-toolbar-title>
-    </v-toolbar> 
+    </v-toolbar>
     <v-main>
       <v-card
         class="ma-3 pa-3"
         style="width:85vw; height:350px; border-width:2px;"
       >
-        <v-card-title>Submit Print Job for Simulation</v-card-title> 
+        <v-card-title>Submit Print Job for Simulation</v-card-title>
         <v-form
-          ref="selectPreviousWorkflowForm"
           fast-fail
           @submit.prevent="submitPrintJob"
         >
@@ -31,7 +30,7 @@
             item-value="WorkflowID"
             outlined
           >
-            <template #item="{ props, item }">
+            <template #item="{ props }">
               <v-list-item v-bind="props"></v-list-item>
             </template>
           </v-select>
@@ -62,7 +61,7 @@
           >
             {{ message1 }}
           </v-alert>
-        </v-form>     
+        </v-form>
       </v-card>
     </v-main>
   </v-app>
@@ -102,7 +101,7 @@ return true;
     ];
 
     const validateSubmitJob = () => {
-        const errors = []; 
+        const errors = [];
         printJobTitleValidation.forEach(rule => {
             const result = rule(printJobTitle.value);
             if (typeof result === "string"){
@@ -113,12 +112,12 @@ return true;
             const result = rule(selectedWorkflow.value);
             if (typeof result === "string"){
                 errors.push(result);
-            }     
+            }
         });
         if (errors.length > 0){
             return false;
         }
-        return true;  
+        return true;
     }
 
 //// API CALLS ////
@@ -142,15 +141,15 @@ return true;
                 console.log("Response from server: " + response)
             }
         } catch (error) {
-            console.log('Error fetching list of workflows');     
+            console.log('Error fetching list of workflows');
         }
     }
-    
+
     const submitPrintJob = async () => {
         if (!validateSubmitJob()){
             return false;
-        } 
-        
+        }
+
         // once API is made this will make api call to backend to generate report
         const workflow = previousWorkflows.value.find(workflow => {
 return workflow.WorkflowID === selectedWorkflow.value
@@ -159,7 +158,7 @@ return workflow.WorkflowID === selectedWorkflow.value
         setTimeout(() => {
           message1.value = '';
         }, 3000);
-        
+
     }
 </script>
 

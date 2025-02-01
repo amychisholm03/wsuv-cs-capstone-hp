@@ -18,9 +18,9 @@ module.exports = {
   ],
   rules: {
     'jsdoc/require-jsdoc': 0,
-//    'sonarjs/no-duplicate-string': 0,
-//    'sonarjs/cognitive-complexity': [1, 15],
-//    'sonarjs/no-identical-functions': 1,
+    //'sonarjs/no-duplicate-string': 0,
+    //'sonarjs/cognitive-complexity': [1, 15],
+    //'sonarjs/no-identical-functions': 1,
     'vue/no-use-computed-property-like-method': 'error',
     'vue/no-undef-properties': ['error', {
       ignores: ['$vuetify'],
@@ -106,29 +106,13 @@ module.exports = {
     {
       files: ['*.vue', '*.js'],
       rules: {
+        'vue/multi-word-component-names': 'off',
         'no-var': 1,
         'vue/no-undef-properties': ['error', {
           ignores: ['$vuetify'],
         }],
       },
-    }, {
-      files: ['centers/templates/custom/gps/inspections/components/entry-page.vue'],
-      rules: {
-        'vuetify/no-deprecated-classes': 0,
-        'vuetify/no-legacy-grid': 0,
-      },
-    },
-    {
-      files: ['centers/templates/custom/office/edms/manage/invoices/table.vue'],
-      rules: {
-        'vue/no-unused-refs': 0,
-      },
-    },
-    {
-      files: ['centers/js/vue_components/dashboard.vue'],
-      rules: {
-        'vue/no-v-html': 0,
-      },
+
     },
   ],
   globals: {
