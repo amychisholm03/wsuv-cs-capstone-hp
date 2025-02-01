@@ -1,7 +1,7 @@
 <template>
   <v-app theme="light">
-      <main-drawer class="sidebar"></main-drawer>
-      <router-view class="content"></router-view>
+    <main-drawer class="sidebar"></main-drawer>
+    <router-view class="content"></router-view>
   </v-app>
 </template>
 
@@ -10,8 +10,7 @@
 </script>
 
 <style>
-
- :root{
+:root{
   --drawer-size:300px;
  }
 
@@ -45,5 +44,4 @@
   padding-bottom:15px; 
   height:50px;
 }
-
 </style>

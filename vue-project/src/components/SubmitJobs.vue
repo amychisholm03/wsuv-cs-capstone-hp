@@ -1,35 +1,71 @@
 <!-- Not Used? -->
 <template>
-    <v-app theme="light">
-        <v-toolbar class="toolbar">
-            <v-toolbar-title class="header">Submit Print Jobs</v-toolbar-title>
-        </v-toolbar> 
-        <v-main>
-            <v-card class="ma-3 pa-3" style="width:85vw; height:350px; border-width:2px;">
-                <v-card-title>Submit Print Job for Simulation</v-card-title> 
-                <v-form ref="selectPreviousWorkflowForm" fast-fail @submit.prevent="submitPrintJob">
-                    <v-text-field :rules="printJobTitleValidation" label="Print Job Title" v-model="printJobTitle" />
-                    <v-select
-                        v-model="selectedWorkflow"
-                        :rules="selectedWorkflowValidation"
-                        :items="previousWorkflows"
-                        label="Select Workflow"
-                        item-title="Title"
-                        item-value="WorkflowID"
-                        outlined
-                    >
-                        <template v-slot:item="{ props, item }">
-                            <v-list-item v-bind="props" ></v-list-item>
-                        </template>
-                    </v-select>
-                    <v-btn type="submit" class="mb-2" color="light-blue-lighten-1">Submit Print Job</v-btn>
-                    <v-btn class="mb-2" color="light-blue-lighten-1" @click="routeTo('/SimulationReports')">View Simulation Report</v-btn>
-                    <v-btn class="mb-2" color="light-blue-lighten-1" @click="routeTo('/Workflows')">Create New Workflow</v-btn>
-                    <v-alert class="mt-2" style="background-color:white;">{{ message1 }}</v-alert>
-                </v-form>     
-            </v-card>
-        </v-main>
-    </v-app>
+  <v-app theme="light">
+    <v-toolbar class="toolbar">
+      <v-toolbar-title class="header">
+        Submit Print Jobs
+      </v-toolbar-title>
+    </v-toolbar> 
+    <v-main>
+      <v-card
+        class="ma-3 pa-3"
+        style="width:85vw; height:350px; border-width:2px;"
+      >
+        <v-card-title>Submit Print Job for Simulation</v-card-title> 
+        <v-form
+          ref="selectPreviousWorkflowForm"
+          fast-fail
+          @submit.prevent="submitPrintJob"
+        >
+          <v-text-field
+            v-model="printJobTitle"
+            :rules="printJobTitleValidation"
+            label="Print Job Title"
+          />
+          <v-select
+            v-model="selectedWorkflow"
+            :rules="selectedWorkflowValidation"
+            :items="previousWorkflows"
+            label="Select Workflow"
+            item-title="Title"
+            item-value="WorkflowID"
+            outlined
+          >
+            <template #item="{ props, item }">
+              <v-list-item v-bind="props"></v-list-item>
+            </template>
+          </v-select>
+          <v-btn
+            type="submit"
+            class="mb-2"
+            color="light-blue-lighten-1"
+          >
+            Submit Print Job
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            color="light-blue-lighten-1"
+            @click="routeTo('/SimulationReports')"
+          >
+            View Simulation Report
+          </v-btn>
+          <v-btn
+            class="mb-2"
+            color="light-blue-lighten-1"
+            @click="routeTo('/Workflows')"
+          >
+            Create New Workflow
+          </v-btn>
+          <v-alert
+            class="mt-2"
+            style="background-color:white;"
+          >
+            {{ message1 }}
+          </v-alert>
+        </v-form>     
+      </v-card>
+    </v-main>
+  </v-app>
 </template>
 
 <script setup>
@@ -50,11 +86,19 @@
 
     //// METHODS ////
     const printJobTitleValidation = [
-        x => { if (x) return true; return 'Print job title cannot not be left empty'}
+        x => {
+ if (x) {
+return true;
+} return 'Print job title cannot not be left empty'
+}
     ];
 
     const selectedWorkflowValidation = [
-        x => { if (x) return true; return 'Workflow must be selected';}
+        x => {
+ if (x) {
+return true;
+} return 'Workflow must be selected';
+}
     ];
 
     const validateSubmitJob = () => {
@@ -108,7 +152,9 @@
         } 
         
         // once API is made this will make api call to backend to generate report
-        const workflow = previousWorkflows.value.find(workflow => workflow.WorkflowID === selectedWorkflow.value)
+        const workflow = previousWorkflows.value.find(workflow => {
+return workflow.WorkflowID === selectedWorkflow.value
+})
         message1.value = printJobTitle.value + " has been submitted using the workflow: " + workflow.Title
         setTimeout(() => {
           message1.value = '';

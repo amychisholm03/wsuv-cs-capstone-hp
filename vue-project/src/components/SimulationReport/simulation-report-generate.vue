@@ -1,31 +1,73 @@
 <template>
   <v-app>
-    <span class="module-title" style="margin-left:10px; margin-bottom:24px;">New Simulation Report</span>
-      <v-form class="pa-2 mr-7" fast-fail ref="selectPreviousWorkflowForm"
-        @submit.prevent="generateSimulationReport">
-        <v-select v-model="selectedPrintJob" return-object :rules="printJobTitleValidation" label="Select Print Job"
-          :items="printJobs" item-title="Title" item-value="id" outlined>
-        </v-select>
-        <v-select v-model="selectedWorkflow" return-object :rules="selectedWorkflowValidation" :items="workflows"
-          label="Select Workflow" item-title="Title" item-value="id" outlined>
-          <template v-slot:item="{ props }">
-            <v-list-item v-bind="props"></v-list-item>
-          </template>
-        </v-select>
-        <v-btn type="submit" class="mb" color="primary" :disabled="failure || success">
-          Generate Simulation report
-        </v-btn>
-        <v-btn size="x-small" icon type="submit" class="mb-2" v-if="success && !failure" color="success">
-          <v-icon size="medium">
-            mdi-check
-          </v-icon>
-        </v-btn>
-        <v-btn size="x-small" icon type="submit" class="mb-2" v-if="!success && failure" color="error">
-          <v-icon size="medium">
-            mdi-close
-          </v-icon>
-        </v-btn>
-      </v-form>
+    <span
+      class="module-title"
+      style="margin-left:10px; margin-bottom:24px;"
+    >New Simulation Report</span>
+    <v-form
+      ref="selectPreviousWorkflowForm"
+      class="mr-7 pa-2"
+      fast-fail
+      @submit.prevent="generateSimulationReport"
+    >
+      <v-select
+        v-model="selectedPrintJob"
+        return-object
+        :rules="printJobTitleValidation"
+        label="Select Print Job"
+        :items="printJobs"
+        item-title="Title"
+        item-value="id"
+        outlined
+      >
+      </v-select>
+      <v-select
+        v-model="selectedWorkflow"
+        return-object
+        :rules="selectedWorkflowValidation"
+        :items="workflows"
+        label="Select Workflow"
+        item-title="Title"
+        item-value="id"
+        outlined
+      >
+        <template #item="{ props }">
+          <v-list-item v-bind="props"></v-list-item>
+        </template>
+      </v-select>
+      <v-btn
+        type="submit"
+        class="mb"
+        color="primary"
+        :disabled="failure || success"
+      >
+        Generate Simulation report
+      </v-btn>
+      <v-btn
+        v-if="success && !failure"
+        size="x-small"
+        icon
+        type="submit"
+        class="mb-2"
+        color="success"
+      >
+        <v-icon size="medium">
+          mdi-check
+        </v-icon>
+      </v-btn>
+      <v-btn
+        v-if="!success && failure"
+        size="x-small"
+        icon
+        type="submit"
+        class="mb-2"
+        color="error"
+      >
+        <v-icon size="medium">
+          mdi-close
+        </v-icon>
+      </v-btn>
+    </v-form>
   </v-app>
 </template>
 
@@ -43,8 +85,16 @@
   const failure = ref(false);
   const selectedPrintJob = ref(null);
   const selectedWorkflow = ref(null);
-  const printJobTitleValidation = [x => { if (x) return true; return 'Print job title cannot not be left empty' }];
-  const selectedWorkflowValidation = [x => { if (x) return true; return 'Workflow must be selected'; }];
+  const printJobTitleValidation = [x => {
+ if (x) {
+return true;
+} return 'Print job title cannot not be left empty' 
+}];
+  const selectedWorkflowValidation = [x => {
+ if (x) {
+return true;
+} return 'Workflow must be selected'; 
+}];
 
   const validateGenerateSimulationReport = () => {
     const errors = [];
@@ -105,5 +155,4 @@
       console.log("An error occurred generating the simulation report: " + error);
     }
   }
-
 </script>
