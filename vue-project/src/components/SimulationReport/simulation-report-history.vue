@@ -200,23 +200,20 @@
 <script setup>
   import { nextTick, ref, onMounted, watch } from "vue";
 
-  /*
-    Props
-  */
-  const {simulationReports, workflows, printJobs} = defineProps({
-      simulationReports: Array,
-      workflows : Array,
-      printJobs: Array,
-    });
+  const {
+    simulationReports = [],
+    workflows = [],
+    printJobs = []
+  }
+  =
+  defineProps({
+    simulationReports: Array,
+    workflows : Array,
+    printJobs: Array,
+  });
 
-  /*
-    Emits
-  */
   const emit = defineEmits(['select-report']);
 
-  /*
-    Reactive Variables
-  */
   const simulationReportsDisplay = ref([]);
   const searchValue = ref('');
   const drawer = ref(false);
@@ -228,9 +225,6 @@
   ///////////////////////////////
   ///// Filters and Searching
   ///////////////////////////////
-  /**
-  * Search Print Job and Workflow Titles
-  */
   const filter = () => {
 
     nextTick(() => {
@@ -266,7 +260,12 @@
         if ((!report.PrintJobTitle) || (!report.WorkflowTitle)) {
           return false;
         }
-        return (report.PrintJobTitle.toLowerCase().includes(searchValue.value.toLowerCase()) || report.WorkflowTitle.toLowerCase().includes(searchValue.value.toLowerCase()));
+
+        const matchPrintJobTitle = report.PrintJobTitle.toLowerCase().includes(searchValue.value.toLowerCase());
+        const matchWorkflowTitle = report.WorkflowTitle.toLowerCase().includes(searchValue.value.toLowerCase());
+
+        return (matchPrintJobTitle || matchWorkflowTitle);
+
       });
     });
   }

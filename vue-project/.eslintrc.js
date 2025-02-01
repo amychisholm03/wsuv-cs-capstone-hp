@@ -43,7 +43,7 @@ module.exports = {
     'vue/no-useless-concat': 'error',
     'vue/operator-linebreak': ['error', 'before'],
     'vue/prefer-template': 'error',
-    'no-console': ['error', { allow: ['warn', 'error'] }],
+    //'no-console': ['error', { allow: ['warn', 'error'] }],
     'vue/attributes-order': ['error', {
       order: [
         'DEFINITION',

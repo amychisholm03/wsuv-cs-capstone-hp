@@ -37,25 +37,25 @@
           label="Date Created"
         ></v-text-field>
         <v-text-field
-          v-model="report.PrintJobTitle"
+          v-model="viewableReport.PrintJobTitle"
           :readonly="true"
           density="compact"
           label="Print Job Title"
         ></v-text-field>
         <v-text-field
-          v-model="printJob.PageCount"
+          v-model="viewablePrintJob.PageCount"
           :readonly="true"
           density="compact"
           label="Page Count"
         ></v-text-field>
         <v-text-field
-          v-model="report.RasterizationProfile"
+          v-model="viewableReport.RasterizationProfile"
           :readonly="true"
           density="compact"
           label="Rasterization Profile"
         ></v-text-field>
         <v-text-field
-          v-model="report.TotalTimeTaken"
+          v-model="viewableReport.TotalTimeTaken"
           :readonly="true"
           density="compact"
           label="Total Time Taken (secs)"
@@ -63,13 +63,13 @@
       </v-col>
       <v-col>
         <v-text-field
-          v-model="report.WorkflowTitle"
+          v-model="viewableReport.WorkflowTitle"
           :readonly="true"
           density="compact"
           label="Workflow Title"
         ></v-text-field>
         <v-text-field
-          v-model="workflow.WorkflowSteps.length"
+          v-model="viewableWorkflow.WorkflowSteps.length"
           :readonly="true"
           density="compact"
           label="Number of Steps"
@@ -81,7 +81,7 @@
             label="Workflow Steps"
           ></v-text-field>
           <v-list-item
-            v-for="(time, step) in report.StepTimes"
+            v-for="(time, step) in viewableReport.StepTimes"
             :key="step"
           >
             <span>
@@ -96,20 +96,33 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-
-// Component refs
+import { onMounted, ref, computed } from "vue";
 const SimulationReportDialogue = ref(false);
-const props = defineProps({
-    report: Object,
-    workflow: Object,
-    printJob: Object,
+
+const {
+  report = null,
+  workflow = null,
+  printJob = null
+}
+=
+defineProps({
+  report: Object,
+  workflow: Object,
+  printJob: Object,
 });
 
 const dateTime = ref("");
+const viewableReport = ref(null);
+const viewableWorkflow = ref(null);
+const viewablePrintJob = ref(null);
+
+// clone props so we cannot mute them.
+viewableReport.value = JSON.parse(JSON.stringify(report));
+viewableWorkflow.value = JSON.parse(JSON.stringify(workflow));
+viewablePrintJob.value = JSON.parse(JSON.stringify(printJob));
 
 onMounted(async () => {
-    dateTime.value = props.report.Date + "  " + props.report.Time
+    dateTime.value = report.Date + "  " + report.Time
 });
 </script>
 
@@ -118,3 +131,4 @@ onMounted(async () => {
     color: red;
 }
 </style>
+

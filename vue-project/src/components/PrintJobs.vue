@@ -9,7 +9,6 @@
           Create New Print Job
         </v-card-title>
         <v-form
-          ref="printjobForm"
           fast-fail
           @submit.prevent="createPrintSettings"
         >
@@ -105,7 +104,7 @@ const titleValidation = [
     x => {
  if (x) {
 return true;
-} return 'Title can not be left empty'; 
+} return 'Title can not be left empty';
 }
 ];
 
@@ -113,7 +112,7 @@ const pageCountValidation = [
   x => {
  if (x) {
 return true;
-} return 'Page count must be non-zero.'; 
+} return 'Page count must be non-zero.';
 }
 ];
 
@@ -121,7 +120,7 @@ const rasterizationProfileValidation = [
   x => {
  if (x || x === 0) {
 return true;
-} return 'Rasterization Profile can not be left empty.'; 
+} return 'Rasterization Profile can not be left empty.';
 }
 ];
 
